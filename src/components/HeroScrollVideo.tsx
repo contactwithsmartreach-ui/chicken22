@@ -8,9 +8,10 @@ export const HeroScrollVideo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [videoDuration, setVideoDuration] = useState(0);
 
-  // High performance refs
-  const tickingRef = useRef(false);
-  const scrollProgressRef = useRef(0);
+  // Refs for tracking smooth scrolling & exact frame mapping
+  const lastScrollTopRef = useRef(0);
+  const lastTimeRef = useRef(0);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -40,26 +41,18 @@ export const HeroScrollVideo = () => {
     const container = containerRef.current;
     if (!video || !container || videoDuration === 0) return;
 
-    const updateVideo = () => {
-      if (videoRef.current && videoDuration > 0) {
-        // Direct assignment synchronized perfectly with browser repaint
-        videoRef.current.currentTime = scrollProgressRef.current * videoDuration;
-      }
-      tickingRef.current = false;
-    };
-
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
       const containerHeight = container.offsetHeight - window.innerHeight;
       
       if (containerHeight > 0) {
-        const progress = -rect.top / containerHeight;
-        scrollProgressRef.current = Math.max(0, Math.min(1, progress));
-      }
+        const progress = Math.max(0, Math.min(1, -rect.top / containerHeight));
+        const targetTime = progress * videoDuration;
 
-      if (!tickingRef.current) {
-        window.requestAnimationFrame(updateVideo);
-        tickingRef.current = true;
+        // Instant direct assignment for exact frame precision when wings are moving
+        if (videoRef.current) {
+          videoRef.current.currentTime = targetTime;
+        }
       }
     };
 
@@ -72,17 +65,17 @@ export const HeroScrollVideo = () => {
   }, [videoDuration]);
 
   return (
-    <div ref={containerRef} className="relative h-[350vh] bg-black">
+    <div ref={containerRef} className="relative h-[400vh] bg-black">
       {/* Sticky viewport for the video */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        {/* Video element with hardware acceleration and will-change */}
+        {/* Video element with hardware acceleration */}
         <video
           ref={videoRef}
           src="/videos/restaurant_3d.mp4"
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover will-change-[transform,opacity]"
+          className="absolute inset-0 w-full h-full object-cover will-change-[transform]"
         />
 
         {/* Loading Indicator */}
