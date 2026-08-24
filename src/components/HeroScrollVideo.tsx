@@ -9,7 +9,7 @@ export const HeroScrollVideo = () => {
   const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
-  const totalFrames = 60; // Reduced to 60 frames for lightning-fast loading under 3 seconds
+  const totalFrames = 60;
 
   useEffect(() => {
     let loadedCount = 0;
@@ -21,7 +21,6 @@ export const HeroScrollVideo = () => {
     video.muted = true;
     video.playsInline = true;
 
-    // Safety timeout fallback to ensure loading never exceeds 3 seconds
     const timeoutId = setTimeout(() => {
       if (isLoading && frames.length > 5) {
         framesRef.current = frames;
@@ -32,8 +31,8 @@ export const HeroScrollVideo = () => {
     video.onloadedmetadata = () => {
       const duration = video.duration || 3;
       const canvas = document.createElement("canvas");
-      canvas.width = 1280;
-      canvas.height = 720;
+      canvas.width = video.videoWidth || 1280;
+      canvas.height = video.videoHeight || 720;
       const ctx = canvas.getContext("2d");
 
       let currentFrame = 0;
@@ -53,7 +52,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.75);
+          img.src = canvas.toDataURL("image/jpeg", 0.8);
           frames.push(img);
         }
 
@@ -96,28 +95,31 @@ export const HeroScrollVideo = () => {
 
         const img = framesRef.current[frameIndex];
         if (img && img.complete) {
-          const dpr = window.devicePixelRatio || 1;
           const width = window.innerWidth;
           const height = window.innerHeight;
+          const dpr = window.devicePixelRatio || 1;
 
-          canvas.width = width * dpr;
-          canvas.height = height * dpr;
-          ctx.scale(dpr, dpr);
+          if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+          }
 
-          const imgWidth = img.naturalWidth || 1280;
-          const imgHeight = img.naturalHeight || 720;
+          const imgWidth = img.width;
+          const imgHeight = img.height;
 
+          // Perfect object-fit: cover calculation
           const hRatio = width / imgWidth;
           const vRatio = height / imgHeight;
           const ratio = Math.max(hRatio, vRatio);
 
-          const drawWidth = imgWidth * ratio;
-          const drawHeight = imgHeight * ratio;
-          const centerShiftX = (width - drawWidth) / 2;
-          const centerShiftY = (height - drawHeight) / 2;
+          const renderW = imgWidth * ratio;
+          const renderH = imgHeight * ratio;
+          const offsetX = (width - renderW) / 2;
+          const offsetY = (height - renderH) / 2;
 
           ctx.clearRect(0, 0, width, height);
-          ctx.drawImage(img, 0, 0, imgWidth, imgHeight, centerShiftX, centerShiftY, drawWidth, drawHeight);
+          ctx.drawImage(img, 0, 0, imgWidth, imgHeight, offsetX, offsetY, renderW, renderH);
         }
       }
 
@@ -134,7 +136,7 @@ export const HeroScrollVideo = () => {
   return (
     <div ref={containerRef} className="relative h-[400vh] bg-black">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
 
         {isLoading && (
           <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
