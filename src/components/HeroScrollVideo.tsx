@@ -6,6 +6,7 @@ export const HeroScrollVideo = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
   const totalFrames = 120;
@@ -23,6 +24,7 @@ export const HeroScrollVideo = () => {
     video.onloadedmetadata = () => {
       const duration = video.duration;
       const canvas = document.createElement("canvas");
+      // Use original high-def proportions
       canvas.width = video.videoWidth || 1920;
       canvas.height = video.videoHeight || 1080;
       const ctx = canvas.getContext("2d");
@@ -48,6 +50,7 @@ export const HeroScrollVideo = () => {
         }
 
         loadedCount++;
+        setLoadProgress(Math.round((loadedCount / totalFrames) * 100));
         currentFrame++;
         extractNextFrame();
       };
@@ -90,6 +93,7 @@ export const HeroScrollVideo = () => {
           const imgWidth = img.naturalWidth || 1920;
           const imgHeight = img.naturalHeight || 1080;
 
+          // 'contain' or balanced cover scaling without side squishing
           const hRatio = width / imgWidth;
           const vRatio = height / imgHeight;
           const ratio = Math.max(hRatio, vRatio);
@@ -120,8 +124,11 @@ export const HeroScrollVideo = () => {
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
 
         {isLoading && (
-          <div className="absolute inset-0 z-50 bg-black flex items-center justify-center">
-            <div className="loader" />
+          <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
+            <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
+            <p className="text-sm font-medium tracking-widest uppercase text-neutral-400">
+              Optimizing 3D Frames ({loadProgress}%)...
+            </p>
           </div>
         )}
       </div>
