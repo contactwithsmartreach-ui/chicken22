@@ -45,7 +45,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.9);
+          img.src = canvas.toDataURL("image/jpeg", 0.85);
           frames.push(img);
         }
 
@@ -85,16 +85,14 @@ export const HeroScrollVideo = () => {
           canvas.width = window.innerWidth;
           canvas.height = window.innerHeight;
           
-          ctx.fillStyle = "#000000";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // Contain aspect ratio to preserve exact original proportions without stretching
+          // Cover aspect ratio draw
           const hRatio = canvas.width / img.width;
           const vRatio = canvas.height / img.height;
-          const ratio = Math.min(hRatio, vRatio);
+          const ratio = Math.max(hRatio, vRatio);
           const centerShiftX = (canvas.width - img.width * ratio) / 2;
           const centerShiftY = (canvas.height - img.height * ratio) / 2;
 
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio, img.height * ratio);
         }
       }
@@ -112,7 +110,7 @@ export const HeroScrollVideo = () => {
   return (
     <div ref={containerRef} className="relative h-[400vh] bg-black">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-contain" />
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
 
         {isLoading && (
           <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
