@@ -8,6 +8,10 @@ export const HeroScrollVideo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [videoDuration, setVideoDuration] = useState(0);
 
+  // High performance refs
+  const tickingRef = useRef(false);
+  const scrollProgressRef = useRef(0);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -15,7 +19,6 @@ export const HeroScrollVideo = () => {
     const handleLoadedMetadata = () => {
       setVideoDuration(video.duration);
       setIsLoading(false);
-      // Force load first frame
       video.currentTime = 0.001;
     };
 
@@ -33,19 +36,31 @@ export const HeroScrollVideo = () => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current || !videoRef.current || videoDuration === 0) return;
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!video || !container || videoDuration === 0) return;
 
-      const container = containerRef.current;
+    const updateVideo = () => {
+      if (videoRef.current && videoDuration > 0) {
+        // Direct assignment synchronized perfectly with browser repaint
+        videoRef.current.currentTime = scrollProgressRef.current * videoDuration;
+      }
+      tickingRef.current = false;
+    };
+
+    const handleScroll = () => {
       const rect = container.getBoundingClientRect();
       const containerHeight = container.offsetHeight - window.innerHeight;
       
-      // Calculate exact progress from 0 to 1
-      const scrollProgress = -rect.top / containerHeight;
-      const clampedProgress = Math.max(0, Math.min(1, scrollProgress));
+      if (containerHeight > 0) {
+        const progress = -rect.top / containerHeight;
+        scrollProgressRef.current = Math.max(0, Math.min(1, progress));
+      }
 
-      // Direct synchronous update to eliminate any buffering or delay lag
-      videoRef.current.currentTime = clampedProgress * videoDuration;
+      if (!tickingRef.current) {
+        window.requestAnimationFrame(updateVideo);
+        tickingRef.current = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -57,17 +72,17 @@ export const HeroScrollVideo = () => {
   }, [videoDuration]);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-black">
+    <div ref={containerRef} className="relative h-[350vh] bg-black">
       {/* Sticky viewport for the video */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        {/* Video element controlled directly by scroll */}
+        {/* Video element with hardware acceleration and will-change */}
         <video
           ref={videoRef}
           src="/videos/restaurant_3d.mp4"
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover will-change-[transform,opacity]"
         />
 
         {/* Loading Indicator */}
