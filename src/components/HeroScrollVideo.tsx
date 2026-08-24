@@ -14,6 +14,11 @@ export const HeroScrollVideo = () => {
     let loadedCount = 0;
     const frames: HTMLImageElement[] = [];
 
+    // Safety fallback timer to ensure loading screen never stays for more than 3 seconds
+    const timeoutId = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
     const video = document.createElement("video");
     video.src = "/videos/restaurant_3d.mp4";
     video.crossOrigin = "anonymous";
@@ -32,6 +37,7 @@ export const HeroScrollVideo = () => {
       const extractNextFrame = () => {
         if (currentFrame >= totalFrames) {
           framesRef.current = frames;
+          clearTimeout(timeoutId);
           setIsLoading(false);
           return;
         }
@@ -43,7 +49,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.9);
+          img.src = canvas.toDataURL("image/jpeg", 0.8);
           frames.push(img);
         }
 
@@ -54,6 +60,8 @@ export const HeroScrollVideo = () => {
 
       extractNextFrame();
     };
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
