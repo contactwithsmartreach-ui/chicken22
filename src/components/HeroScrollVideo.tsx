@@ -8,9 +8,8 @@ export const HeroScrollVideo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [videoDuration, setVideoDuration] = useState(0);
 
-  // Refs for tracking smooth scrolling & exact frame mapping
-  const lastScrollTopRef = useRef(0);
-  const lastTimeRef = useRef(0);
+  const targetTimeRef = useRef(0);
+  const currentTimeRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -37,9 +36,24 @@ export const HeroScrollVideo = () => {
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
     const container = containerRef.current;
-    if (!video || !container || videoDuration === 0) return;
+    const video = videoRef.current;
+    if (!container || !video || videoDuration === 0) return;
+
+    // Smooth linear interpolation loop for buttery smooth frame transitions without lag
+    const renderLoop = () => {
+      if (videoRef.current) {
+        // Lerp factor (0.35) balances instant response with buttery smoothness for the wings
+        const diff = targetTimeRef.current - currentTimeRef.current;
+        if (Math.abs(diff) > 0.001) {
+          currentTimeRef.current += diff * 0.35;
+          videoRef.current.currentTime = currentTimeRef.current;
+        }
+      }
+      rafIdRef.current = requestAnimationFrame(renderLoop);
+    };
+
+    rafIdRef.current = requestAnimationFrame(renderLoop);
 
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
@@ -47,12 +61,7 @@ export const HeroScrollVideo = () => {
       
       if (containerHeight > 0) {
         const progress = Math.max(0, Math.min(1, -rect.top / containerHeight));
-        const targetTime = progress * videoDuration;
-
-        // Instant direct assignment for exact frame precision when wings are moving
-        if (videoRef.current) {
-          videoRef.current.currentTime = targetTime;
-        }
+        targetTimeRef.current = progress * videoDuration;
       }
     };
 
@@ -61,11 +70,12 @@ export const HeroScrollVideo = () => {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
   }, [videoDuration]);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-black">
+    <div ref={containerRef} className="relative h-[450vh] bg-black">
       {/* Sticky viewport for the video */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
         {/* Video element with hardware acceleration */}
