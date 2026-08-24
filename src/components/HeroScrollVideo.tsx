@@ -3,85 +3,121 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export const HeroScrollVideo = () => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [videoDuration, setVideoDuration] = useState(0);
+  const [loadProgress, setLoadProgress] = useState(0);
+
+  const framesRef = useRef<HTMLImageElement[]>([]);
+  const totalFrames = 120; // Number of pre-rendered frames for instant seeking
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    let loadedCount = 0;
+    const frames: HTMLImageElement[] = [];
 
-    const handleLoadedMetadata = () => {
-      setVideoDuration(video.duration);
-      setIsLoading(false);
-      video.currentTime = 0.001;
-    };
+    // Pre-load frames or render from video to an offscreen canvas for zero lag
+    const video = document.createElement("video");
+    video.src = "/videos/restaurant_3d.mp4";
+    video.crossOrigin = "anonymous";
+    video.muted = true;
+    video.playsInline = true;
 
-    video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    
-    if (video.readyState >= 1) {
-      setVideoDuration(video.duration);
-      setIsLoading(false);
-      video.currentTime = 0.001;
-    }
+    video.onloadedmetadata = () => {
+      const duration = video.duration;
+      const canvas = document.createElement("canvas");
+      canvas.width = 1920;
+      canvas.height = 1080;
+      const ctx = canvas.getContext("2d");
 
-    return () => {
-      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      let currentFrame = 0;
+
+      const extractNextFrame = () => {
+        if (currentFrame >= totalFrames) {
+          framesRef.current = frames;
+          setIsLoading(false);
+          return;
+        }
+
+        video.currentTime = (currentFrame / totalFrames) * duration;
+      };
+
+      video.onseeked = () => {
+        if (ctx) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const img = new Image();
+          img.src = canvas.toDataURL("image/jpeg", 0.85);
+          frames.push(img);
+        }
+
+        loadedCount++;
+        setLoadProgress(Math.round((loadedCount / totalFrames) * 100));
+        currentFrame++;
+        extractNextFrame();
+      };
+
+      extractNextFrame();
     };
   }, []);
 
   useEffect(() => {
     const container = containerRef.current;
-    const video = videoRef.current;
-    if (!container || !video || videoDuration === 0) return;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
 
-    let ticking = false;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const rect = container.getBoundingClientRect();
-          const containerHeight = container.offsetHeight - window.innerHeight;
+    let rafId: number;
+
+    const render = () => {
+      const rect = container.getBoundingClientRect();
+      const containerHeight = container.offsetHeight - window.innerHeight;
+
+      if (containerHeight > 0 && framesRef.current.length > 0) {
+        const progress = Math.max(0, Math.min(1, -rect.top / containerHeight));
+        const frameIndex = Math.min(
+          framesRef.current.length - 1,
+          Math.floor(progress * framesRef.current.length)
+        );
+
+        const img = framesRef.current[frameIndex];
+        if (img && img.complete) {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
           
-          if (containerHeight > 0 && videoRef.current) {
-            const progress = Math.max(0, Math.min(1, -rect.top / containerHeight));
-            // Directly set currentTime without smoothing lag
-            videoRef.current.currentTime = progress * videoDuration;
-          }
-          ticking = false;
-        });
-        ticking = true;
+          // Cover aspect ratio draw
+          const hRatio = canvas.width / img.width;
+          const vRatio = canvas.height / img.height;
+          const ratio = Math.max(hRatio, vRatio);
+          const centerShiftX = (canvas.width - img.width * ratio) / 2;
+          const centerShiftY = (canvas.height - img.height * ratio) / 2;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio, img.height * ratio);
+        }
       }
+
+      rafId = requestAnimationFrame(render);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    rafId = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafId);
     };
-  }, [videoDuration]);
+  }, [isLoading]);
 
   return (
-    <div ref={containerRef} className="relative h-[300vh] bg-black">
-      {/* Sticky viewport for the video */}
+    <div ref={containerRef} className="relative h-[400vh] bg-black">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        {/* Video element with hardware acceleration */}
-        <video
-          ref={videoRef}
-          src="/videos/restaurant_3d.mp4"
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover transform-gpu"
-        />
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
 
-        {/* Loading Indicator */}
         {isLoading && (
           <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
-            <div className="w-12 h-12 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
-            <p className="text-sm font-medium tracking-widest uppercase text-neutral-400">Loading Cinematic Experience...</p>
+            <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
+            <p className="text-sm font-medium tracking-widest uppercase text-neutral-400">
+              Optimizing 3D Frames ({loadProgress}%)...
+            </p>
           </div>
         )}
       </div>
