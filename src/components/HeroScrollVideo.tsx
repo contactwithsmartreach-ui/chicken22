@@ -9,13 +9,12 @@ export const HeroScrollVideo = () => {
   const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
-  const totalFrames = 120; // Number of pre-rendered frames for instant seeking
+  const totalFrames = 120;
 
   useEffect(() => {
     let loadedCount = 0;
     const frames: HTMLImageElement[] = [];
 
-    // Pre-load frames or render from video to an offscreen canvas for zero lag
     const video = document.createElement("video");
     video.src = "/videos/restaurant_3d.mp4";
     video.crossOrigin = "anonymous";
@@ -25,8 +24,9 @@ export const HeroScrollVideo = () => {
     video.onloadedmetadata = () => {
       const duration = video.duration;
       const canvas = document.createElement("canvas");
-      canvas.width = 1920;
-      canvas.height = 1080;
+      // Use original high-def proportions
+      canvas.width = video.videoWidth || 1920;
+      canvas.height = video.videoHeight || 1080;
       const ctx = canvas.getContext("2d");
 
       let currentFrame = 0;
@@ -45,7 +45,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.85);
+          img.src = canvas.toDataURL("image/jpeg", 0.9);
           frames.push(img);
         }
 
@@ -82,18 +82,29 @@ export const HeroScrollVideo = () => {
 
         const img = framesRef.current[frameIndex];
         if (img && img.complete) {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          
-          // Cover aspect ratio draw
-          const hRatio = canvas.width / img.width;
-          const vRatio = canvas.height / img.height;
-          const ratio = Math.max(hRatio, vRatio);
-          const centerShiftX = (canvas.width - img.width * ratio) / 2;
-          const centerShiftY = (canvas.height - img.height * ratio) / 2;
+          const dpr = window.devicePixelRatio || 1;
+          const width = window.innerWidth;
+          const height = window.innerHeight;
 
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio, img.height * ratio);
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          ctx.scale(dpr, dpr);
+
+          const imgWidth = img.naturalWidth || 1920;
+          const imgHeight = img.naturalHeight || 1080;
+
+          // 'contain' or balanced cover scaling without side squishing
+          const hRatio = width / imgWidth;
+          const vRatio = height / imgHeight;
+          const ratio = Math.max(hRatio, vRatio);
+
+          const drawWidth = imgWidth * ratio;
+          const drawHeight = imgHeight * ratio;
+          const centerShiftX = (width - drawWidth) / 2;
+          const centerShiftY = (height - drawHeight) / 2;
+
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, imgWidth, imgHeight, centerShiftX, centerShiftY, drawWidth, drawHeight);
         }
       }
 
