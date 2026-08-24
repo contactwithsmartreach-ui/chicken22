@@ -9,7 +9,7 @@ export const HeroScrollVideo = () => {
   const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
-  const totalFrames = 120;
+  const totalFrames = 60; // Reduced to 60 frames for lightning-fast loading under 3 seconds
 
   useEffect(() => {
     let loadedCount = 0;
@@ -21,18 +21,26 @@ export const HeroScrollVideo = () => {
     video.muted = true;
     video.playsInline = true;
 
+    // Safety timeout fallback to ensure loading never exceeds 3 seconds
+    const timeoutId = setTimeout(() => {
+      if (isLoading && frames.length > 5) {
+        framesRef.current = frames;
+        setIsLoading(false);
+      }
+    }, 2800);
+
     video.onloadedmetadata = () => {
-      const duration = video.duration;
+      const duration = video.duration || 3;
       const canvas = document.createElement("canvas");
-      // Use original high-def proportions
-      canvas.width = video.videoWidth || 1920;
-      canvas.height = video.videoHeight || 1080;
+      canvas.width = 1280;
+      canvas.height = 720;
       const ctx = canvas.getContext("2d");
 
       let currentFrame = 0;
 
       const extractNextFrame = () => {
         if (currentFrame >= totalFrames) {
+          clearTimeout(timeoutId);
           framesRef.current = frames;
           setIsLoading(false);
           return;
@@ -45,7 +53,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.9);
+          img.src = canvas.toDataURL("image/jpeg", 0.75);
           frames.push(img);
         }
 
@@ -56,6 +64,12 @@ export const HeroScrollVideo = () => {
       };
 
       extractNextFrame();
+    };
+
+    video.load();
+
+    return () => {
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -90,10 +104,9 @@ export const HeroScrollVideo = () => {
           canvas.height = height * dpr;
           ctx.scale(dpr, dpr);
 
-          const imgWidth = img.naturalWidth || 1920;
-          const imgHeight = img.naturalHeight || 1080;
+          const imgWidth = img.naturalWidth || 1280;
+          const imgHeight = img.naturalHeight || 720;
 
-          // 'contain' or balanced cover scaling without side squishing
           const hRatio = width / imgWidth;
           const vRatio = height / imgHeight;
           const ratio = Math.max(hRatio, vRatio);
@@ -127,7 +140,7 @@ export const HeroScrollVideo = () => {
           <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
             <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
             <p className="text-sm font-medium tracking-widest uppercase text-neutral-400">
-              Optimizing 3D Frames ({loadProgress}%)...
+              Loading 3D Experience ({loadProgress}%)...
             </p>
           </div>
         )}
