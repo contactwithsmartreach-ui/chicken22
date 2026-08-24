@@ -9,38 +9,54 @@ export const HeroScrollVideo = () => {
   const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
-  const totalFrames = 60; // 60 optimized pre-cached frames for instant loading
+  const totalFrames = 120;
 
   useEffect(() => {
     let loadedCount = 0;
     const frames: HTMLImageElement[] = [];
 
-    for (let i = 1; i <= totalFrames; i++) {
-      const img = new Image();
-      // Pad frame index to 3 digits e.g. frame_001.jpg
-      const paddedIndex = String(i).padStart(3, '0');
-      img.src = `/frames/frame_${paddedIndex}.jpg`;
+    const video = document.createElement("video");
+    video.src = "/videos/restaurant_3d.mp4";
+    video.crossOrigin = "anonymous";
+    video.muted = true;
+    video.playsInline = true;
 
-      img.onload = () => {
+    video.onloadedmetadata = () => {
+      const duration = video.duration;
+      const canvas = document.createElement("canvas");
+      // Use original high-def proportions
+      canvas.width = video.videoWidth || 1920;
+      canvas.height = video.videoHeight || 1080;
+      const ctx = canvas.getContext("2d");
+
+      let currentFrame = 0;
+
+      const extractNextFrame = () => {
+        if (currentFrame >= totalFrames) {
+          framesRef.current = frames;
+          setIsLoading(false);
+          return;
+        }
+
+        video.currentTime = (currentFrame / totalFrames) * duration;
+      };
+
+      video.onseeked = () => {
+        if (ctx) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const img = new Image();
+          img.src = canvas.toDataURL("image/jpeg", 0.9);
+          frames.push(img);
+        }
+
         loadedCount++;
         setLoadProgress(Math.round((loadedCount / totalFrames) * 100));
-        if (loadedCount === totalFrames) {
-          setIsLoading(false);
-        }
+        currentFrame++;
+        extractNextFrame();
       };
 
-      img.onerror = () => {
-        // Fallback or count anyway to prevent hanging
-        loadedCount++;
-        if (loadedCount === totalFrames) {
-          setIsLoading(false);
-        }
-      };
-
-      frames.push(img);
-    }
-
-    framesRef.current = frames;
+      extractNextFrame();
+    };
   }, []);
 
   useEffect(() => {
@@ -65,7 +81,7 @@ export const HeroScrollVideo = () => {
         );
 
         const img = framesRef.current[frameIndex];
-        if (img && img.complete && img.naturalWidth > 0) {
+        if (img && img.complete) {
           const dpr = window.devicePixelRatio || 1;
           const width = window.innerWidth;
           const height = window.innerHeight;
@@ -77,6 +93,7 @@ export const HeroScrollVideo = () => {
           const imgWidth = img.naturalWidth || 1920;
           const imgHeight = img.naturalHeight || 1080;
 
+          // 'contain' or balanced cover scaling without side squishing
           const hRatio = width / imgWidth;
           const vRatio = height / imgHeight;
           const ratio = Math.max(hRatio, vRatio);
@@ -110,7 +127,7 @@ export const HeroScrollVideo = () => {
           <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
             <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
             <p className="text-sm font-medium tracking-widest uppercase text-neutral-400">
-              Loading Experience ({loadProgress}%)...
+              Optimizing 3D Frames ({loadProgress}%)...
             </p>
           </div>
         )}
