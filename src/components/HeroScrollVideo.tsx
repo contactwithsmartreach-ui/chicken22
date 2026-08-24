@@ -8,7 +8,7 @@ export const HeroScrollVideo = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
-  const totalFrames = 120;
+  const totalFrames = 30; // Reduced frame count for lightning-fast loading
 
   useEffect(() => {
     let loadedCount = 0;
@@ -23,8 +23,9 @@ export const HeroScrollVideo = () => {
     video.onloadedmetadata = () => {
       const duration = video.duration;
       const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth || 1920;
-      canvas.height = video.videoHeight || 1080;
+      // Smaller dimensions for instant encoding
+      canvas.width = 960;
+      canvas.height = 540;
       const ctx = canvas.getContext("2d");
 
       let currentFrame = 0;
@@ -43,7 +44,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.9);
+          img.src = canvas.toDataURL("image/jpeg", 0.75); // Fast compression
           frames.push(img);
         }
 
@@ -87,8 +88,8 @@ export const HeroScrollVideo = () => {
           canvas.height = height * dpr;
           ctx.scale(dpr, dpr);
 
-          const imgWidth = img.naturalWidth || 1920;
-          const imgHeight = img.naturalHeight || 1080;
+          const imgWidth = img.naturalWidth || 960;
+          const imgHeight = img.naturalHeight || 540;
 
           const hRatio = width / imgWidth;
           const vRatio = height / imgHeight;
