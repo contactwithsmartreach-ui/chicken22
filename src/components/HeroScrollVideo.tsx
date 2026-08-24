@@ -13,18 +13,11 @@ export const HeroScrollVideo = () => {
   useEffect(() => {
     let loadedCount = 0;
     const frames: HTMLImageElement[] = [];
-    let isFinished = false;
 
-    const finishLoading = () => {
-      if (isFinished) return;
-      isFinished = true;
-      if (frames.length > 0 && framesRef.current.length === 0) {
-        framesRef.current = frames;
-      }
+    // Safety fallback timer to ensure loading screen never stays for more than 3 seconds
+    const timeoutId = setTimeout(() => {
       setIsLoading(false);
-    };
-
-    const timeoutId = setTimeout(finishLoading, 2500);
+    }, 3000);
 
     const video = document.createElement("video");
     video.src = "/videos/restaurant_3d.mp4";
@@ -33,7 +26,7 @@ export const HeroScrollVideo = () => {
     video.playsInline = true;
 
     video.onloadedmetadata = () => {
-      const duration = video.duration || 4;
+      const duration = video.duration;
       const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth || 1920;
       canvas.height = video.videoHeight || 1080;
@@ -42,10 +35,10 @@ export const HeroScrollVideo = () => {
       let currentFrame = 0;
 
       const extractNextFrame = () => {
-        if (currentFrame >= totalFrames || isFinished) {
+        if (currentFrame >= totalFrames) {
           framesRef.current = frames;
           clearTimeout(timeoutId);
-          finishLoading();
+          setIsLoading(false);
           return;
         }
 
@@ -56,9 +49,8 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.7);
+          img.src = canvas.toDataURL("image/jpeg", 0.8);
           frames.push(img);
-          framesRef.current = [...frames]; // update immediately as they come in
         }
 
         loadedCount++;
@@ -67,11 +59,6 @@ export const HeroScrollVideo = () => {
       };
 
       extractNextFrame();
-    };
-
-    video.onerror = () => {
-      clearTimeout(timeoutId);
-      finishLoading();
     };
 
     return () => clearTimeout(timeoutId);
@@ -98,17 +85,15 @@ export const HeroScrollVideo = () => {
           Math.floor(progress * framesRef.current.length)
         );
 
-        const img = framesRef.current[frameIndex] || framesRef.current[0];
-        if (img && (img.complete || img.naturalWidth)) {
+        const img = framesRef.current[frameIndex];
+        if (img && img.complete) {
           const dpr = window.devicePixelRatio || 1;
           const width = window.innerWidth;
           const height = window.innerHeight;
 
-          if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            ctx.scale(dpr, dpr);
-          }
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          ctx.scale(dpr, dpr);
 
           const imgWidth = img.naturalWidth || 1920;
           const imgHeight = img.naturalHeight || 1080;
@@ -135,7 +120,7 @@ export const HeroScrollVideo = () => {
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [isLoading]);
 
   return (
     <div ref={containerRef} className="relative h-[400vh] bg-black">
