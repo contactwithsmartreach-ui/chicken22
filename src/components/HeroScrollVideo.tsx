@@ -9,7 +9,7 @@ export const HeroScrollVideo = () => {
   const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<HTMLImageElement[]>([]);
-  const totalFrames = 36; // Reduced to 36 keyframes for ultra-fast instant sub-3s loading while keeping buttery smooth scrolling
+  const totalFrames = 36;
 
   useEffect(() => {
     let loadedCount = 0;
@@ -27,9 +27,9 @@ export const HeroScrollVideo = () => {
     video.onloadedmetadata = () => {
       const duration = video.duration;
       const canvas = document.createElement("canvas");
-      // Smaller resolution for lightning fast data-url generation and zero lag
-      canvas.width = 960;
-      canvas.height = 540;
+      // Use 16:9 aspect ratio dimensions for the offscreen capture
+      canvas.width = 1280;
+      canvas.height = 720;
       const ctx = canvas.getContext("2d", { alpha: false });
 
       let currentIndex = 0;
@@ -47,15 +47,14 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.75);
+          img.src = canvas.toDataURL("image/jpeg", 0.8);
           frames[currentIndex] = img;
         }
 
         loadedCount++;
         setLoadProgress(Math.round((loadedCount / totalFrames) * 100));
         
-        // If we have at least 10 frames, we can start immediately while the rest load in background!
-        if (loadedCount >= 10 && !isInitialized && isLoading) {
+        if (loadedCount >= 8 && !isInitialized && isLoading) {
           framesRef.current = frames;
           setIsLoading(false);
           isInitialized = true;
@@ -104,20 +103,22 @@ export const HeroScrollVideo = () => {
           canvas.height = height * dpr;
           ctx.scale(dpr, dpr);
 
-          const imgWidth = 960;
-          const imgHeight = 540;
+          // Standard 1280x720 source aspect ratio
+          const srcWidth = 1280;
+          const srcHeight = 720;
 
-          const hRatio = width / imgWidth;
-          const vRatio = height / imgHeight;
+          // 'cover' calculation without stretching sides
+          const hRatio = width / srcWidth;
+          const vRatio = height / srcHeight;
           const ratio = Math.max(hRatio, vRatio);
 
-          const drawWidth = imgWidth * ratio;
-          const drawHeight = imgHeight * ratio;
+          const drawWidth = srcWidth * ratio;
+          const drawHeight = srcHeight * ratio;
           const centerShiftX = (width - drawWidth) / 2;
           const centerShiftY = (height - drawHeight) / 2;
 
           ctx.clearRect(0, 0, width, height);
-          ctx.drawImage(img, 0, 0, imgWidth, imgHeight, centerShiftX, centerShiftY, drawWidth, drawHeight);
+          ctx.drawImage(img, 0, 0, srcWidth, srcHeight, centerShiftX, centerShiftY, drawWidth, drawHeight);
         }
       }
 
