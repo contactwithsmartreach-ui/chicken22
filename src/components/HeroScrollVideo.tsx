@@ -20,7 +20,6 @@ export const HeroScrollVideo = () => {
     const frames: (ImageBitmap | HTMLImageElement)[] = [];
     let loadedCount = 0;
 
-    // Hard ceiling: Guarantees loading dismisses within 2.8 seconds
     const maxLoadingTimer = setTimeout(() => {
       if (!isCancelled) {
         framesRef.current = frames;
@@ -107,7 +106,6 @@ export const HeroScrollVideo = () => {
     };
   }, []);
 
-  // Passive scroll listener for target progress
   useEffect(() => {
     const handleScroll = () => {
       const container = containerRef.current;
@@ -130,7 +128,6 @@ export const HeroScrollVideo = () => {
     };
   }, []);
 
-  // Optimized Render Loop with smooth lerp
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -211,7 +208,7 @@ export const HeroScrollVideo = () => {
           className="absolute inset-0 w-full h-full block transform-gpu will-change-transform"
         />
 
-        <div className="absolute inset-0 bg-neutral-950/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-950/25 pointer-events-none" />
 
         {isLoading && (
           <div className="absolute inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-5 text-amber-400">
@@ -229,11 +226,13 @@ export const HeroScrollVideo = () => {
         )}
 
         {!isLoading && (
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-80 animate-bounce">
-            <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90">
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2.5 pointer-events-none opacity-90">
+            <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90 drop-shadow-md">
               Scroll to explore
             </span>
-            <ChevronDown className="w-4 h-4 text-amber-400" />
+            <div className="w-8 h-12 rounded-full border-2 border-amber-500/40 flex items-start justify-center p-2 backdrop-blur-sm bg-neutral-950/30">
+              <div className="w-1 h-2 bg-amber-400 rounded-full animate-bounce" />
+            </div>
           </div>
         )}
       </div>
