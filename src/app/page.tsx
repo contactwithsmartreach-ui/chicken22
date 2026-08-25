@@ -1,6 +1,4 @@
 import { HeroScrollVideo } from "@/components/HeroScrollVideo";
-import { MenuSection } from "@/components/MenuSection";
-import { ChefStory } from "@/components/ChefStory";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 
 export default function Home() {
@@ -8,12 +6,6 @@ export default function Home() {
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-amber-500 selection:text-neutral-950">
       {/* 3D Scrollable Video Hero Section */}
       <HeroScrollVideo />
-
-      {/* 4K Gourmet Menu Section with High-Res Wings and Zoom */}
-      <MenuSection />
-
-      {/* Culinary Story */}
-      <ChefStory />
 
       {/* Minimal Footer */}
       <footer className="py-12 px-6 border-t border-neutral-900 bg-neutral-950 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
