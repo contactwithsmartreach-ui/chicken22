@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Flame, Check, Eye } from "lucide-react";
+import { Sparkles, Wine, Flame, Leaf, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -81,31 +81,27 @@ export const MenuSection = () => {
   const [activeTab, setActiveTab] = useState("mains");
   const [selectedDish, setSelectedDish] = useState<any>(menuItems.mains[0]);
 
-  const handleInspectDish = (dishName: string) => {
-    toast.success(`Inspecting ${dishName} tasting profile`);
+  const handleOrderDish = (dishName: string) => {
+    toast.success(`${dishName} added to your tasting menu selection!`);
   };
 
   return (
-    <section id="menu" className="py-32 px-6 lg:px-16 bg-neutral-950 text-white relative overflow-hidden">
-      {/* Background ambient glowing gradients */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-10 -right-32 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section id="menu" className="py-28 px-6 lg:px-16 bg-neutral-950 text-white relative">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 via-amber-500/20 to-amber-500/10 border border-amber-500/30 text-amber-400 text-xs tracking-[0.25em] uppercase mb-4 font-semibold shadow-inner">
-            <Sparkles className="w-3.5 h-3.5 animate-pulse text-amber-300" />
-            Interactive Catalog
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs tracking-widest uppercase mb-4 font-semibold">
+            <Sparkles className="w-3.5 h-3.5" />
+            Gastronomy Catalog
           </div>
-          <h2 className="text-4xl sm:text-6xl font-serif font-bold mb-6 tracking-tight bg-gradient-to-r from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">
-            The Gastronomy <span className="italic text-amber-400">Collection</span>
+          <h2 className="text-4xl sm:text-5xl font-serif font-bold mb-6 tracking-tight">
+            The Interactive <span className="italic text-amber-400">3D Menu</span>
           </h2>
-          <p className="text-neutral-400 text-base sm:text-lg leading-relaxed font-light">
-            Examine our seasonal creations crafted with precision, rare ingredients, and visionary artistry.
+          <p className="text-neutral-400 text-base sm:text-lg">
+            Explore our meticulously crafted culinary selections. Click any creation to inspect ingredients, nutritional profile, and wine pairings.
           </p>
         </div>
 
-        {/* Glassmorphism Category Tabs */}
+        {/* Category Tabs */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           {menuCategories.map((cat) => (
             <button
@@ -114,10 +110,10 @@ export const MenuSection = () => {
                 setActiveTab(cat.id);
                 setSelectedDish((menuItems as any)[cat.id][0]);
               }}
-              className={`px-7 py-3 rounded-full text-sm font-medium transition-all duration-500 backdrop-blur-xl border ${
+              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 border ${
                 activeTab === cat.id
-                  ? "bg-gradient-to-r from-amber-500 to-amber-600 text-neutral-950 border-amber-400 shadow-lg shadow-amber-500/25 scale-105"
-                  : "bg-neutral-900/60 text-neutral-300 border-neutral-800/80 hover:border-amber-500/40 hover:bg-neutral-900/90"
+                  ? "bg-amber-500 text-neutral-950 border-amber-400 shadow-lg shadow-amber-500/20"
+                  : "bg-neutral-900/80 text-neutral-300 border-neutral-800 hover:border-amber-500/40"
               }`}
             >
               {cat.label}
@@ -126,84 +122,79 @@ export const MenuSection = () => {
         </div>
 
         {/* Display Grid & Feature Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* List of items */}
           <div className="lg:col-span-6 space-y-4">
             {(menuItems as any)[activeTab].map((item: any) => (
               <div
                 key={item.id}
                 onClick={() => setSelectedDish(item)}
-                className={`group p-5 sm:p-6 rounded-3xl border transition-all duration-500 cursor-pointer flex items-center justify-between gap-5 backdrop-blur-xl ${
+                className={`p-6 rounded-2xl border transition-all duration-300 cursor-pointer flex items-center justify-between gap-6 ${
                   selectedDish.id === item.id
-                    ? "bg-neutral-900/90 border-amber-500/50 shadow-2xl shadow-amber-500/10 scale-[1.02]"
-                    : "bg-neutral-900/30 border-neutral-800/60 hover:border-neutral-700 hover:bg-neutral-900/50"
+                    ? "bg-neutral-900 border-amber-500/60 shadow-xl shadow-amber-500/5"
+                    : "bg-neutral-900/40 border-neutral-800 hover:border-neutral-700"
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-neutral-800 flex-shrink-0">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/40 to-transparent" />
-                  </div>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-16 h-16 rounded-xl object-cover border border-neutral-800"
+                  />
                   <div>
-                    <h4 className="font-serif font-semibold text-lg text-white group-hover:text-amber-300 transition-colors">
-                      {item.name}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-neutral-400 line-clamp-1 mt-1 font-light">
-                      {item.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mt-2.5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-serif font-semibold text-lg text-white">{item.name}</h4>
+                    </div>
+                    <p className="text-sm text-neutral-400 line-clamp-1">{item.description}</p>
+                    <div className="flex gap-2 mt-2">
                       {item.tags.map((t: string) => (
-                        <span key={t} className="text-[10px] uppercase px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium tracking-wider">
+                        <span key={t} className="text-[10px] uppercase px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">
                           {t}
                         </span>
                       ))}
                     </div>
                   </div>
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <span className="text-xl sm:text-2xl font-serif font-bold text-amber-400">{item.price}</span>
+                <div className="text-right">
+                  <span className="text-xl font-serif font-bold text-amber-400">{item.price}</span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Detailed Selected Dish Glassmorphism Showcase Card */}
+          {/* Detailed Selected Dish 3D Showcase Card */}
           <div className="lg:col-span-6">
-            <div className="relative rounded-3xl overflow-hidden border border-amber-500/30 bg-gradient-to-b from-neutral-900/90 to-neutral-950 p-6 sm:p-8 shadow-2xl backdrop-blur-2xl">
-              <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative rounded-3xl overflow-hidden border border-amber-500/30 bg-neutral-900 p-8 shadow-2xl">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden mb-6 border border-neutral-800 shadow-inner group">
+              <div className="relative h-72 rounded-2xl overflow-hidden mb-6 border border-neutral-800">
                 <img
                   src={selectedDish.image}
                   alt={selectedDish.name}
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                  <span className="px-3.5 py-1.5 rounded-full bg-neutral-950/80 backdrop-blur-md text-amber-300 text-xs font-semibold border border-amber-500/30 tracking-wider">
+                  <span className="px-3 py-1 rounded-full bg-neutral-950/70 backdrop-blur-md text-amber-300 text-xs font-semibold border border-amber-500/30">
                     {selectedDish.calories}
                   </span>
-                  <span className="text-3xl font-serif font-bold text-white drop-shadow-md">{selectedDish.price}</span>
+                  <span className="text-2xl font-serif font-bold text-white">{selectedDish.price}</span>
                 </div>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-3 tracking-tight">
+              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-3">
                 {selectedDish.name}
               </h3>
-              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed mb-8 font-light">
+              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed mb-8">
                 {selectedDish.description}
               </p>
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <Button
-                  onClick={() => handleInspectDish(selectedDish.name)}
-                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold py-4 rounded-2xl shadow-xl shadow-amber-500/20 text-base transition-all duration-300 transform hover:scale-[1.02]"
+                  onClick={() => handleOrderDish(selectedDish.name)}
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-neutral-950 font-bold py-4 rounded-xl shadow-lg shadow-amber-500/20 text-base"
                 >
-                  <Eye className="w-4 h-4 mr-2" /> Inspect Culinary Profile
+                  Add to Tasting Menu
                 </Button>
               </div>
             </div>
