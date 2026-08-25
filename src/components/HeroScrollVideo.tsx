@@ -15,7 +15,8 @@ export const HeroScrollVideo = () => {
   const currentProgressRef = useRef(0);
   const lastRenderedIndexRef = useRef(-1);
 
-  const totalFrames = 60;
+  // 36 frames provides ultra-fast loading while maintaining fluid 60fps+ with lerp
+  const totalFrames = 36;
 
   useEffect(() => {
     let isCancelled = false;
@@ -29,13 +30,13 @@ export const HeroScrollVideo = () => {
     video.playsInline = true;
     video.preload = "auto";
 
-    // Safety timeout in case video loading hangs or format fallback is needed
+    // Quick safety release (max 1.2s) so user is never stuck waiting
     const timeoutId = setTimeout(() => {
-      if (!isCancelled && frames.length > 5) {
+      if (!isCancelled && frames.length >= 3) {
         framesRef.current = frames;
         setIsLoading(false);
       }
-    }, 3000);
+    }, 1200);
 
     video.onloadedmetadata = () => {
       if (isCancelled) return;
@@ -84,7 +85,15 @@ export const HeroScrollVideo = () => {
         }
 
         loadedCount++;
-        setLoadProgress(Math.round((loadedCount / totalFrames) * 100));
+        framesRef.current = frames;
+        const progress = Math.round((loadedCount / totalFrames) * 100);
+        setLoadProgress(progress);
+
+        // Progressive unlock: unblock UI after the first quick batch is ready
+        if (loadedCount >= 8 && isLoading) {
+          setIsLoading(false);
+        }
+
         currentFrame++;
         extractNextFrame();
       };
@@ -212,18 +221,18 @@ export const HeroScrollVideo = () => {
         {/* Ambient subtle vignette overlay for depth */}
         <div className="absolute inset-0 bg-radial-vignette pointer-events-none opacity-40" />
 
-        {/* Loading overlay with seamless progress animation */}
+        {/* Quick loading overlay */}
         {isLoading && (
-          <div className="absolute inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-5 text-amber-400">
+          <div className="absolute inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-4 text-amber-400 transition-opacity duration-300">
             <div className="relative">
-              <div className="w-16 h-16 border-2 border-amber-500/20 border-t-amber-400 rounded-full animate-spin" />
-              <Sparkles className="w-5 h-5 text-amber-400 absolute inset-0 m-auto animate-pulse" />
+              <div className="w-12 h-12 border-2 border-amber-500/20 border-t-amber-400 rounded-full animate-spin" />
+              <Sparkles className="w-4 h-4 text-amber-400 absolute inset-0 m-auto animate-pulse" />
             </div>
-            <div className="text-center space-y-2">
-              <p className="text-xs font-semibold tracking-[0.25em] uppercase text-neutral-300">
-                Calibrating 3D Experience
+            <div className="text-center space-y-1">
+              <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-neutral-300">
+                Preparing Experience
               </p>
-              <p className="text-amber-400 font-mono text-sm">{loadProgress}%</p>
+              <p className="text-amber-400 font-mono text-xs">{loadProgress}%</p>
             </div>
           </div>
         )}
