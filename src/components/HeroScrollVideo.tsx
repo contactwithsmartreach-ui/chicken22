@@ -9,7 +9,7 @@ export const HeroScrollVideo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
 
-  // Using ImageBitmap for GPU-direct zero-overhead rendering
+  // Using ImageBitmap / Image array with pre-allocated slots for instantaneous readiness
   const framesRef = useRef<(ImageBitmap | HTMLImageElement)[]>([]);
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
@@ -19,7 +19,6 @@ export const HeroScrollVideo = () => {
 
   useEffect(() => {
     let isCancelled = false;
-    const frames: (ImageBitmap | HTMLImageElement)[] = [];
     let loadedCount = 0;
 
     const video = document.createElement("video");
@@ -29,13 +28,12 @@ export const HeroScrollVideo = () => {
     video.playsInline = true;
     video.preload = "auto";
 
-    // Safety timeout in case video loading hangs or format fallback is needed
-    const timeoutId = setTimeout(() => {
-      if (!isCancelled && frames.length > 5) {
-        framesRef.current = frames;
+    // Fast-unlock safety timeout: display the experience quickly
+    const fastUnlockTimeout = setTimeout(() => {
+      if (!isCancelled) {
         setIsLoading(false);
       }
-    }, 3000);
+    }, 450);
 
     video.onloadedmetadata = () => {
       if (isCancelled) return;
@@ -53,13 +51,11 @@ export const HeroScrollVideo = () => {
       const extractNextFrame = () => {
         if (isCancelled) return;
         if (currentFrame >= totalFrames) {
-          clearTimeout(timeoutId);
-          framesRef.current = frames;
           setIsLoading(false);
           return;
         }
 
-        video.currentTime = (currentFrame / totalFrames) * duration;
+        video.currentTime = (currentFrame / (totalFrames - 1 || 1)) * duration;
       };
 
       video.onseeked = async () => {
@@ -67,24 +63,36 @@ export const HeroScrollVideo = () => {
 
         if (offCtx) {
           offCtx.drawImage(video, 0, 0, vidWidth, vidHeight);
+          let frameImage: ImageBitmap | HTMLImageElement;
+
           try {
             if ("createImageBitmap" in window) {
-              const bitmap = await createImageBitmap(offscreenCanvas);
-              frames.push(bitmap);
+              frameImage = await createImageBitmap(offscreenCanvas);
             } else {
               const img = new Image();
               img.src = offscreenCanvas.toDataURL("image/jpeg", 0.85);
-              frames.push(img);
+              frameImage = img;
             }
           } catch {
             const img = new Image();
             img.src = offscreenCanvas.toDataURL("image/jpeg", 0.85);
-            frames.push(img);
+            frameImage = img;
+          }
+
+          // Populate the frame slot
+          if (framesRef.current.length === 0) {
+            // Seed all initial slots with the first available frame for zero flicker
+            framesRef.current = new Array(totalFrames).fill(frameImage);
+            // Quickly dismiss loader once first pristine frame is rendered
+            setIsLoading(false);
+          } else {
+            framesRef.current[currentFrame] = frameImage;
           }
         }
 
         loadedCount++;
         setLoadProgress(Math.round((loadedCount / totalFrames) * 100));
+
         currentFrame++;
         extractNextFrame();
       };
@@ -96,7 +104,7 @@ export const HeroScrollVideo = () => {
 
     return () => {
       isCancelled = true;
-      clearTimeout(timeoutId);
+      clearTimeout(fastUnlockTimeout);
     };
   }, []);
 
@@ -160,7 +168,7 @@ export const HeroScrollVideo = () => {
         );
 
         const frame = frames[frameIndex];
-        if (frame) {
+        if (frame && frame.width > 0 && frame.height > 0) {
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
           const screenW = window.innerWidth;
           const screenH = window.innerHeight;
@@ -198,7 +206,7 @@ export const HeroScrollVideo = () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [isLoading]);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative h-[400vh] bg-neutral-950">
@@ -212,18 +220,18 @@ export const HeroScrollVideo = () => {
         {/* Ambient subtle vignette overlay for depth */}
         <div className="absolute inset-0 bg-radial-vignette pointer-events-none opacity-40" />
 
-        {/* Loading overlay with seamless progress animation */}
+        {/* Short & smooth loading overlay */}
         {isLoading && (
-          <div className="absolute inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-5 text-amber-400">
+          <div className="absolute inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-5 text-amber-400 transition-opacity duration-300">
             <div className="relative">
-              <div className="w-16 h-16 border-2 border-amber-500/20 border-t-amber-400 rounded-full animate-spin" />
+              <div className="w-14 h-14 border-2 border-amber-500/20 border-t-amber-400 rounded-full animate-spin" />
               <Sparkles className="w-5 h-5 text-amber-400 absolute inset-0 m-auto animate-pulse" />
             </div>
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-1">
               <p className="text-xs font-semibold tracking-[0.25em] uppercase text-neutral-300">
                 Calibrating 3D Experience
               </p>
-              <p className="text-amber-400 font-mono text-sm">{loadProgress}%</p>
+              <p className="text-amber-400 font-mono text-xs">{loadProgress}%</p>
             </div>
           </div>
         )}
