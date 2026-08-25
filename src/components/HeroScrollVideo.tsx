@@ -123,7 +123,7 @@ export const HeroScrollVideo = () => {
     };
   }, []);
 
-  // Optimized Render Loop with Linear Interpolation (Lerp) & Resize Observer
+  // Optimized Render Loop with faster Linear Interpolation (Lerp) & Resize Observer
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -148,9 +148,9 @@ export const HeroScrollVideo = () => {
     window.addEventListener("resize", resizeCanvas, { passive: true });
 
     const render = () => {
-      // Lerp current progress smoothly towards target progress for 60fps/120fps fluid feel
+      // Increased lerp speed from 0.12 to 0.28 for rapid, immediate response to scrolling
       const diff = targetProgressRef.current - currentProgressRef.current;
-      currentProgressRef.current += diff * 0.12;
+      currentProgressRef.current += diff * 0.28;
 
       const frames = framesRef.current;
       if (frames.length > 0) {
@@ -201,7 +201,7 @@ export const HeroScrollVideo = () => {
   }, [isLoading]);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-neutral-950">
+    <div ref={containerRef} className="relative h-[180vh] bg-neutral-950">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black select-none">
         {/* Canvas displaying high-performance smooth 3D video frames */}
         <canvas
