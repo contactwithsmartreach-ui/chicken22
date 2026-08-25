@@ -11,10 +11,6 @@ export const HeroScrollVideo = () => {
   const framesRef = useRef<HTMLImageElement[]>([]);
   const totalFrames = 60;
 
-  // Smooth interpolation refs
-  const targetProgressRef = useRef(0);
-  const currentProgressRef = useRef(0);
-
   useEffect(() => {
     let loadedCount = 0;
     const frames: HTMLImageElement[] = [];
@@ -56,7 +52,7 @@ export const HeroScrollVideo = () => {
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const img = new Image();
-          img.src = canvas.toDataURL("image/jpeg", 0.85);
+          img.src = canvas.toDataURL("image/jpeg", 0.8);
           frames.push(img);
         }
 
@@ -86,26 +82,15 @@ export const HeroScrollVideo = () => {
 
     let rafId: number;
 
-    const handleScroll = () => {
+    const render = () => {
       const rect = container.getBoundingClientRect();
       const containerHeight = container.offsetHeight - window.innerHeight;
-      if (containerHeight > 0) {
-        targetProgressRef.current = Math.max(0, Math.min(1, -rect.top / containerHeight));
-      }
-    };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    const render = () => {
-      // Linear Interpolation (lerp) for buttery smooth momentum
-      const current = currentProgressRef.current;
-      const target = targetProgressRef.current;
-      currentProgressRef.current += (target - current) * 0.12; // 0.12 smoothing factor for silk-like glide
-
-      if (framesRef.current.length > 0) {
+      if (containerHeight > 0 && framesRef.current.length > 0) {
+        const progress = Math.max(0, Math.min(1, -rect.top / containerHeight));
         const frameIndex = Math.min(
           framesRef.current.length - 1,
-          Math.floor(currentProgressRef.current * (framesRef.current.length - 1))
+          Math.floor(progress * framesRef.current.length)
         );
 
         const img = framesRef.current[frameIndex];
@@ -123,6 +108,7 @@ export const HeroScrollVideo = () => {
           const imgWidth = img.width;
           const imgHeight = img.height;
 
+          // Perfect object-fit: cover calculation
           const hRatio = width / imgWidth;
           const vRatio = height / imgHeight;
           const ratio = Math.max(hRatio, vRatio);
@@ -143,7 +129,6 @@ export const HeroScrollVideo = () => {
     rafId = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(rafId);
     };
   }, [isLoading]);
@@ -152,21 +137,6 @@ export const HeroScrollVideo = () => {
     <div ref={containerRef} className="relative h-[400vh] bg-black">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
-
-        {/* Overlay Content synced with scroll progress */}
-        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-center p-6 z-10">
-          <div className="max-w-3xl space-y-4">
-            <span className="px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-widest backdrop-blur-md">
-              Michelin Three-Star Experience
-            </span>
-            <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight text-white drop-shadow-2xl">
-              L'Élixir <span className="italic text-amber-400">Gastronomy</span>
-            </h1>
-            <p className="text-neutral-300 text-lg sm:text-xl font-light max-w-xl mx-auto drop-shadow-md">
-              Scroll to step into our immersive 3D architectural salon and explore culinary mastery.
-            </p>
-          </div>
-        </div>
 
         {isLoading && (
           <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center gap-4 text-amber-400">
