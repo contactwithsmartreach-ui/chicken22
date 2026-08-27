@@ -10,10 +10,6 @@ export const SalonSection = () => {
     <section id="salon" className="py-36 px-6 lg:px-16 bg-neutral-950 text-white relative">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
         <div className="lg:col-span-6 space-y-8">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs tracking-widest uppercase font-semibold">
-            <MapPin className="w-3.5 h-3.5" />
-            The Dining Salon
-          </div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight leading-none text-white">
             An Oasis of <span className="italic font-normal text-amber-400">Refinement</span>
           </h2>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Eye, X } from "lucide-react";
+import { Eye, X } from "lucide-react";
 
 const exploreDishes = [
   {
@@ -74,10 +74,6 @@ export const ExploreGallery = () => {
     <section id="gallery" className="py-32 bg-neutral-950 text-white relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs tracking-widest uppercase mb-4 font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            Gastronomic Index
-          </div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none">
             Explore <span className="italic font-normal text-amber-400">Creations</span>
           </h2>
@@ -124,16 +120,6 @@ export const ExploreGallery = () => {
                 className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-80" />
-              
-              <div className="absolute top-4 left-4">
-                <span className="px-3.5 py-1.5 rounded-full bg-neutral-950/80 backdrop-blur-md text-amber-300 text-xs tracking-wider uppercase font-medium border border-neutral-800">
-                  {dish.category}
-                </span>
-              </div>
-
-              <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-neutral-950/80 backdrop-blur-md border border-neutral-800 flex items-center justify-center text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Eye className="w-4 h-4" />
-              </div>
 
               <div className="absolute bottom-4 left-6 font-mono text-xs text-amber-400/80">
                 0{index + 1} / 0{filteredDishes.length}
