@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Eye, X } from "lucide-react";
+import { BrandScroller, BrandScrollerReverse } from "@/components/ui/brand-scoller";
 
 const exploreDishes = [
   {
@@ -71,8 +72,8 @@ export const ExploreGallery = () => {
     : exploreDishes.filter(dish => dish.category === selectedCategory);
 
   return (
-    <section id="gallery" className="py-32 bg-neutral-950 text-white relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section id="gallery" className="py-32 bg-neutral-950 text-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none">
             Explore <span className="italic font-normal text-amber-400">Creations</span>
@@ -81,6 +82,12 @@ export const ExploreGallery = () => {
         <p className="text-neutral-400 max-w-sm text-sm leading-relaxed">
           Select a category below to filter masterworks and inspect their culinary profile.
         </p>
+      </div>
+
+      {/* Brand Scroller Ticker Integration */}
+      <div className="mb-16 space-y-4 py-4 border-y border-neutral-900 bg-neutral-900/40 backdrop-blur-sm text-neutral-400">
+        <BrandScroller />
+        <BrandScrollerReverse />
       </div>
 
       {/* Category Filter Pills */}
