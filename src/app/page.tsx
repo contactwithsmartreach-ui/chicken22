@@ -9,15 +9,17 @@ export default function Home() {
     <div className="min-h-screen bg-[#681403] text-white">
       <Navigation />
 
-      {/* 3D Scrollable Video Hero Section (untouched dark theme) */}
-      <div id="explore" className="relative">
+      {/* 3D Scrollable Video Hero Section */}
+      <div id="explore" className="relative pb-24 bg-gradient-to-b from-black via-[#681403] to-[#8b1e06]">
         <HeroScrollVideo />
-        {/* Seamless smooth gradient fade into the next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-[#8b1e06]/60 to-[#8b1e06] pointer-events-none z-30" />
+        {/* Deep, tall gradient overlay that completely dissolves any hard boundary */}
+        <div className="absolute -bottom-1 left-0 right-0 h-64 bg-gradient-to-b from-transparent via-[#681403]/80 to-[#8b1e06] pointer-events-none z-30" />
       </div>
 
-      {/* Explore-Only Dish Catalogue with Palette & Glassmorphism */}
-      <ExploreGallery />
+      {/* Explore-Only Dish Catalogue */}
+      <div className="-mt-12 relative z-20">
+        <ExploreGallery />
+      </div>
 
       {/* Salon Location & Reservation */}
       <SalonSection />
