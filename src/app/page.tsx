@@ -1,6 +1,7 @@
 import { HeroScrollVideo } from "@/components/HeroScrollVideo";
 import { Navigation } from "@/components/Navigation";
 import { ExploreGallery } from "@/components/ExploreGallery";
+import { RunningCardsMenu } from "@/components/RunningCardsMenu";
 import { SalonSection } from "@/components/SalonSection";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 
@@ -18,6 +19,9 @@ export default function Home() {
 
       {/* Explore-Only Dish Catalogue with Palette & Glassmorphism */}
       <ExploreGallery />
+
+      {/* Running Cards Interactive Menu Carousel */}
+      <RunningCardsMenu />
 
       {/* Salon Location & Reservation */}
       <SalonSection />
