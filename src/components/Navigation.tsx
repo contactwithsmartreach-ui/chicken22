@@ -17,7 +17,7 @@ export const Navigation = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#EBE9E1]/80 backdrop-blur-xl border-b border-[#221c19]/10 py-4 shadow-sm" : "bg-transparent py-6"}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#E43D12]/20 backdrop-blur-xl border-b border-[#221c19]/10 py-4 shadow-sm" : "bg-transparent py-6"}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2 group">
           <span className="font-serif text-2xl lg:text-3xl font-bold tracking-tight text-[#221c19] group-hover:text-[#E43D12] transition-colors">
