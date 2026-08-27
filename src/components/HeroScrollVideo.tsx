@@ -8,8 +8,8 @@ export const HeroScrollVideo = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const framesRef = useRef<(ImageBitmap | HTMLImageElement)[]>([]);
-  const targetProgressRef = useRef(0);
-  const currentProgressRef = useRef(0);
+  const targetProgressRef = useRef(0.05); // Start slightly ahead so initial frame renders immediately
+  const currentProgressRef = useRef(0.05);
 
   const totalFrames = 60;
 
@@ -186,7 +186,7 @@ export const HeroScrollVideo = () => {
           className="absolute inset-0 w-full h-full block transform-gpu will-change-transform"
         />
 
-        <div className="absolute inset-0 bg-neutral-950/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-950/10 pointer-events-none" />
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-80 animate-bounce">
           <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90">
