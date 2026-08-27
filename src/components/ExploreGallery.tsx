@@ -82,11 +82,8 @@ export const ExploreGallery = () => {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
         <div>
-          <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none flex items-center gap-4 flex-wrap">
-            <span>Explore</span>
-            <span className="inline-block px-6 py-2 rounded-3xl bg-[#EFB11D] text-neutral-950 font-black tracking-normal uppercase shadow-xl shadow-black/40 border-2 border-white/30 transform -rotate-2 hover:rotate-0 transition-transform">
-              MENU
-            </span>
+          <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none">
+            Explore <span className="italic font-normal text-[#EFB11D]">Creations</span>
           </h2>
         </div>
         <p className="text-white/80 max-w-sm text-sm leading-relaxed">
