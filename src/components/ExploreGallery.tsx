@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Sparkles, Eye, X, Flame, Leaf, Award } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Sparkles, Eye, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const exploreDishes = [
   {
@@ -62,71 +62,108 @@ const exploreDishes = [
 
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, clientWidth } = scrollContainerRef.current;
+      const scrollAmount = clientWidth * 0.75;
+      scrollContainerRef.current.scrollTo({
+        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
-    <section id="gallery" className="py-32 px-6 lg:px-16 bg-neutral-950 text-white relative">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs tracking-widest uppercase mb-4 font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />
-              Gastronomic Index
-            </div>
-            <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none">
-              Explore <span className="italic font-normal text-amber-400">Creations</span>
-            </h2>
+    <section id="gallery" className="py-32 bg-neutral-950 text-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs tracking-widest uppercase mb-4 font-semibold">
+            <Sparkles className="w-3.5 h-3.5" />
+            Gastronomic Index
           </div>
-          <p className="text-neutral-400 max-w-md text-base leading-relaxed">
-            Inspect our curated masterworks in ultra-high resolution. Each dish is an exploration of geometry, origin, and sensory alchemy.
-          </p>
+          <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none">
+            Explore <span className="italic font-normal text-amber-400">Creations</span>
+          </h2>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {exploreDishes.map((dish) => (
-            <div
-              key={dish.id}
-              onClick={() => setActiveModalDish(dish)}
-              className="group relative rounded-3xl overflow-hidden bg-neutral-900 border border-neutral-800 cursor-pointer transition-all duration-500 hover:border-amber-400/50 hover:shadow-2xl hover:shadow-amber-400/5"
+        <div className="flex items-center gap-4">
+          <p className="text-neutral-400 max-w-xs text-sm leading-relaxed hidden sm:block">
+            Swipe or use controls to browse our curated masterworks horizontally.
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => scroll("left")}
+              className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:border-amber-400/50 flex items-center justify-center transition-all duration-300"
+              aria-label="Scroll left"
             >
-              <div className="relative h-80 overflow-hidden">
-                <img
-                  src={dish.image}
-                  alt={dish.name}
-                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-80" />
-                
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full bg-neutral-950/80 backdrop-blur-md text-amber-300 text-xs tracking-wider uppercase font-medium border border-neutral-800">
-                    {dish.category}
-                  </span>
-                </div>
-
-                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-neutral-950/80 backdrop-blur-md border border-neutral-800 flex items-center justify-center text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Eye className="w-4 h-4" />
-                </div>
-              </div>
-
-              <div className="p-8">
-                <h3 className="font-serif text-2xl font-medium text-white mb-3 group-hover:text-amber-300 transition-colors">
-                  {dish.name}
-                </h3>
-                <p className="text-neutral-400 text-sm line-clamp-2 leading-relaxed mb-6">
-                  {dish.description}
-                </p>
-                <div className="flex items-center justify-between pt-4 border-t border-neutral-800/80 text-xs text-neutral-400">
-                  <span className="tracking-wider uppercase">{dish.origin.split("&")[0]}</span>
-                  <span className="text-amber-400 font-medium tracking-wide flex items-center gap-1">
-                    Inspect Dish <Eye className="w-3.5 h-3.5 ml-1" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:border-amber-400/50 flex items-center justify-center transition-all duration-300"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Dish Inspection Modal (Exploration Only - No Ordering) */}
+      {/* Horizontal Sideways Scrolling Track */}
+      <div
+        ref={scrollContainerRef}
+        className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {exploreDishes.map((dish, index) => (
+          <div
+            key={dish.id}
+            onClick={() => setActiveModalDish(dish)}
+            className="group relative flex-shrink-0 w-[340px] sm:w-[420px] rounded-3xl overflow-hidden bg-neutral-900 border border-neutral-800 cursor-pointer snap-center transition-all duration-500 hover:border-amber-400/60 hover:shadow-2xl hover:shadow-amber-400/10 transform hover:-translate-y-2"
+          >
+            <div className="relative h-80 overflow-hidden">
+              <img
+                src={dish.image}
+                alt={dish.name}
+                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-80" />
+              
+              <div className="absolute top-4 left-4">
+                <span className="px-3.5 py-1.5 rounded-full bg-neutral-950/80 backdrop-blur-md text-amber-300 text-xs tracking-wider uppercase font-medium border border-neutral-800">
+                  {dish.category}
+                </span>
+              </div>
+
+              <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-neutral-950/80 backdrop-blur-md border border-neutral-800 flex items-center justify-center text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Eye className="w-4 h-4" />
+              </div>
+
+              <div className="absolute bottom-4 left-6 font-mono text-xs text-amber-400/80">
+                0{index + 1} / 0{exploreDishes.length}
+              </div>
+            </div>
+
+            <div className="p-8">
+              <h3 className="font-serif text-2xl font-medium text-white mb-3 group-hover:text-amber-300 transition-colors">
+                {dish.name}
+              </h3>
+              <p className="text-neutral-400 text-sm line-clamp-2 leading-relaxed mb-6">
+                {dish.description}
+              </p>
+              <div className="flex items-center justify-between pt-4 border-t border-neutral-800/80 text-xs text-neutral-400">
+                <span className="tracking-wider uppercase">{dish.origin.split("&")[0]}</span>
+                <span className="text-amber-400 font-medium tracking-wide flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Inspect Dish <Eye className="w-3.5 h-3.5 ml-1" />
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Dish Inspection Modal */}
       {activeModalDish && (
         <div className="fixed inset-0 z-50 bg-neutral-950/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300">
           <div className="relative w-full max-w-3xl bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
