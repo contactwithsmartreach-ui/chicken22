@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ReservationModal } from "@/components/ReservationModal";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
@@ -32,14 +31,6 @@ export const Navigation = () => {
           <a href="#salon" className="hover:text-amber-400 transition-colors">THE SALON</a>
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
-          <ReservationModal>
-            <Button className="bg-amber-400 hover:bg-amber-500 text-neutral-950 font-semibold px-6 py-2.5 rounded-full tracking-wider text-xs uppercase transition-all duration-300 shadow-lg shadow-amber-400/10">
-              Reserve Table
-            </Button>
-          </ReservationModal>
-        </div>
-
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden text-neutral-300 hover:text-white"
@@ -53,11 +44,6 @@ export const Navigation = () => {
           <a href="#explore" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">Explore</a>
           <a href="#gallery" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">Catalogue</a>
           <a href="#salon" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">The Salon</a>
-          <ReservationModal>
-            <Button className="w-full bg-amber-400 text-neutral-950 font-semibold py-3 rounded-full mt-2">
-              Reserve Table
-            </Button>
-          </ReservationModal>
         </div>
       )}
     </header>
