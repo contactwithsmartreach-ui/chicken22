@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ReservationModal } from "@/components/ReservationModal";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -24,13 +24,11 @@ export const Navigation = () => {
           <span className="font-serif text-2xl lg:text-3xl font-bold tracking-tight text-white group-hover:text-amber-400 transition-colors">
             L'ÉLIXIR
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
         </a>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide text-neutral-300">
           <a href="#explore" className="hover:text-amber-400 transition-colors">EXPLORE</a>
           <a href="#gallery" className="hover:text-amber-400 transition-colors">CATALOGUE</a>
-          <a href="#philosophy" className="hover:text-amber-400 transition-colors">PHILOSOPHY</a>
           <a href="#salon" className="hover:text-amber-400 transition-colors">THE SALON</a>
         </nav>
 
@@ -54,7 +52,6 @@ export const Navigation = () => {
         <div className="absolute top-full left-0 right-0 bg-neutral-950/95 backdrop-blur-2xl border-b border-neutral-900 p-6 flex flex-col gap-4 md:hidden">
           <a href="#explore" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">Explore</a>
           <a href="#gallery" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">Catalogue</a>
-          <a href="#philosophy" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">Philosophy</a>
           <a href="#salon" onClick={() => setMobileMenuOpen(false)} className="text-lg font-serif text-neutral-300 hover:text-amber-400">The Salon</a>
           <ReservationModal>
             <Button className="w-full bg-amber-400 text-neutral-950 font-semibold py-3 rounded-full mt-2">
