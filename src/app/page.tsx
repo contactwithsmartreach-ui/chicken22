@@ -1,6 +1,7 @@
 import { HeroScrollVideo } from "@/components/HeroScrollVideo";
 import { Navigation } from "@/components/Navigation";
 import { ExploreGallery } from "@/components/ExploreGallery";
+import { AnimatedGallerySection } from "@/components/AnimatedGallerySection";
 import { SalonSection } from "@/components/SalonSection";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 
@@ -16,6 +17,9 @@ export default function Home() {
 
       {/* Explore-Only Dish Catalogue */}
       <ExploreGallery />
+
+      {/* Animated 3D Gallery Component */}
+      <AnimatedGallerySection />
 
       {/* Salon Location & Reservation */}
       <SalonSection />
