@@ -11,9 +11,12 @@ export const HeroScrollVideo = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Ensure video is loaded and ready
     video.pause();
     video.currentTime = 0;
+
+    let targetTime = 0;
+    let currentTime = 0;
+    let animationFrameId: number;
 
     const handleScroll = () => {
       const container = containerRef.current;
@@ -24,15 +27,29 @@ export const HeroScrollVideo = () => {
 
       if (containerHeight > 0) {
         const rawProgress = Math.max(0, Math.min(1, -rect.top / containerHeight));
-        video.currentTime = rawProgress * video.duration;
+        targetTime = rawProgress * video.duration;
       }
     };
 
+    const updateVideoTime = () => {
+      // Smooth linear interpolation (lerp) for butter-smooth animation without lag
+      const diff = targetTime - currentTime;
+      if (Math.abs(diff) > 0.001) {
+        currentTime += diff * 0.12; // Adjust smoothing weight
+        if (Number.isFinite(currentTime) && currentTime >= 0 && currentTime <= video.duration) {
+          video.currentTime = currentTime;
+        }
+      }
+      animationFrameId = requestAnimationFrame(updateVideoTime);
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+    animationFrameId = requestAnimationFrame(updateVideoTime);
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
@@ -42,7 +59,7 @@ export const HeroScrollVideo = () => {
         <video
           ref={videoRef}
           src="/videos/restaurant_3d.mp4"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu will-change-auto"
           muted
           playsInline
           preload="auto"
