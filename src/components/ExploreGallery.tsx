@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { Sparkles, Eye, X, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { Sparkles, Eye, X } from "lucide-react";
 
 const exploreDishes = [
   {
@@ -60,24 +60,19 @@ const exploreDishes = [
   },
 ];
 
+const categories = ["All Creations", "Amuse-Bouche", "Haute Cuisine", "Avant-Garde Sweets", "Alchemical Beverages", "Coastal Reserve", "Signature Starter"];
+
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("All Creations");
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, clientWidth } = scrollContainerRef.current;
-      const scrollAmount = clientWidth * 0.75;
-      scrollContainerRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+  const filteredDishes = selectedCategory === "All Creations"
+    ? exploreDishes
+    : exploreDishes.filter(dish => dish.category === selectedCategory);
 
   return (
-    <section id="gallery" className="py-32 bg-neutral-950 text-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section id="gallery" className="py-32 bg-neutral-950 text-white relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs tracking-widest uppercase mb-4 font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
@@ -87,36 +82,36 @@ export const ExploreGallery = () => {
             Explore <span className="italic font-normal text-amber-400">Creations</span>
           </h2>
         </div>
-        <div className="flex items-center gap-4">
-          <p className="text-neutral-400 max-w-xs text-sm leading-relaxed hidden sm:block">
-            Swipe or use controls to browse our curated masterworks horizontally.
-          </p>
-          <div className="flex gap-2">
+        <p className="text-neutral-400 max-w-sm text-sm leading-relaxed">
+          Select a category below to filter masterworks and inspect their culinary profile.
+        </p>
+      </div>
+
+      {/* Category Filter Pills */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16">
+        <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+          {categories.map((cat) => (
             <button
-              onClick={() => scroll("left")}
-              className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:border-amber-400/50 flex items-center justify-center transition-all duration-300"
-              aria-label="Scroll left"
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex-shrink-0 border ${
+                selectedCategory === cat
+                  ? "bg-amber-400 text-neutral-950 border-amber-400 shadow-lg shadow-amber-400/10"
+                  : "bg-neutral-900 text-neutral-400 border-neutral-800 hover:border-neutral-700 hover:text-white"
+              }`}
             >
-              <ChevronLeft className="w-5 h-5" />
+              {cat}
             </button>
-            <button
-              onClick={() => scroll("right")}
-              className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:border-amber-400/50 flex items-center justify-center transition-all duration-300"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Horizontal Sideways Scrolling Track */}
       <div
-        ref={scrollContainerRef}
         className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {exploreDishes.map((dish, index) => (
+        {filteredDishes.map((dish, index) => (
           <div
             key={dish.id}
             onClick={() => setActiveModalDish(dish)}
@@ -141,7 +136,7 @@ export const ExploreGallery = () => {
               </div>
 
               <div className="absolute bottom-4 left-6 font-mono text-xs text-amber-400/80">
-                0{index + 1} / 0{exploreDishes.length}
+                0{index + 1} / 0{filteredDishes.length}
               </div>
             </div>
 
