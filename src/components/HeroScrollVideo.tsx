@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, Sparkles } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { ChevronDown } from "lucide-react";
 
 export const HeroScrollVideo = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadProgress, setLoadProgress] = useState(0);
 
   const framesRef = useRef<(ImageBitmap | HTMLImageElement)[]>([]);
   const targetProgressRef = useRef(0);
@@ -18,16 +16,6 @@ export const HeroScrollVideo = () => {
   useEffect(() => {
     let isCancelled = false;
     const frames: (ImageBitmap | HTMLImageElement)[] = [];
-    let loadedCount = 0;
-
-    // Hard ceiling: Guarantees loading dismisses within 2.8 seconds
-    const maxLoadingTimer = setTimeout(() => {
-      if (!isCancelled) {
-        framesRef.current = frames;
-        setLoadProgress(100);
-        setIsLoading(false);
-      }
-    }, 2800);
 
     const video = document.createElement("video");
     video.src = "/videos/restaurant_3d.mp4";
@@ -52,10 +40,7 @@ export const HeroScrollVideo = () => {
       const extractNextFrame = () => {
         if (isCancelled) return;
         if (currentFrame >= totalFrames) {
-          clearTimeout(maxLoadingTimer);
           framesRef.current = frames;
-          setLoadProgress(100);
-          setIsLoading(false);
           return;
         }
 
@@ -83,8 +68,6 @@ export const HeroScrollVideo = () => {
           }
         }
 
-        loadedCount++;
-        setLoadProgress(Math.min(100, Math.round((loadedCount / totalFrames) * 100)));
         currentFrame++;
         extractNextFrame();
       };
@@ -92,18 +75,10 @@ export const HeroScrollVideo = () => {
       extractNextFrame();
     };
 
-    video.onerror = () => {
-      if (!isCancelled) {
-        clearTimeout(maxLoadingTimer);
-        setIsLoading(false);
-      }
-    };
-
     video.load();
 
     return () => {
       isCancelled = true;
-      clearTimeout(maxLoadingTimer);
     };
   }, []);
 
@@ -201,7 +176,7 @@ export const HeroScrollVideo = () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [isLoading]);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative h-[400vh] bg-neutral-950">
@@ -213,29 +188,12 @@ export const HeroScrollVideo = () => {
 
         <div className="absolute inset-0 bg-neutral-950/20 pointer-events-none" />
 
-        {isLoading && (
-          <div className="absolute inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-5 text-amber-400">
-            <div className="relative">
-              <div className="w-16 h-16 border-2 border-amber-500/20 border-t-amber-400 rounded-full animate-spin" />
-              <Sparkles className="w-5 h-5 text-amber-400 absolute inset-0 m-auto animate-pulse" />
-            </div>
-            <div className="text-center space-y-2">
-              <p className="text-xs font-semibold tracking-[0.25em] uppercase text-neutral-300">
-                Calibrating 3D Experience
-              </p>
-              <p className="text-amber-400 font-mono text-sm">{loadProgress}%</p>
-            </div>
-          </div>
-        )}
-
-        {!isLoading && (
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-80 animate-bounce">
-            <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90">
-              Scroll to explore
-            </span>
-            <ChevronDown className="w-4 h-4 text-amber-400" />
-          </div>
-        )}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-80 animate-bounce">
+          <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90">
+            Scroll to explore
+          </span>
+          <ChevronDown className="w-4 h-4 text-amber-400" />
+        </div>
       </div>
     </div>
   );
