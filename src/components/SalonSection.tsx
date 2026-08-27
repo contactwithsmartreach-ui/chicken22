@@ -2,8 +2,6 @@
 
 import React from "react";
 import { MapPin, Clock, Phone } from "lucide-react";
-import { ReservationModal } from "@/components/ReservationModal";
-import { Button } from "@/components/ui/button";
 
 export const SalonSection = () => {
   return (
@@ -33,14 +31,6 @@ export const SalonSection = () => {
               <Phone className="w-5 h-5 text-[#EFB11D] shrink-0" />
               <span>+33 1 42 68 55 00</span>
             </div>
-          </div>
-
-          <div className="pt-4">
-            <ReservationModal>
-              <Button className="bg-[#EFB11D] hover:bg-[#d69d12] text-neutral-950 font-bold px-8 py-6 text-base transition-all">
-                Reserve Your Table Now
-              </Button>
-            </ReservationModal>
           </div>
         </div>
 
