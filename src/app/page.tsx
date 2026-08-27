@@ -10,8 +10,10 @@ export default function Home() {
       <Navigation />
 
       {/* 3D Scrollable Video Hero Section (untouched dark theme) */}
-      <div id="explore">
+      <div id="explore" className="relative">
         <HeroScrollVideo />
+        {/* Seamless smooth gradient fade into the next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-[#8b1e06]/60 to-[#8b1e06] pointer-events-none z-30" />
       </div>
 
       {/* Explore-Only Dish Catalogue with Palette & Glassmorphism */}
