@@ -4,63 +4,28 @@ import React, { useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
 export const HeroScrollVideo = () => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.pause();
-    video.currentTime = 0;
-
-    let targetTime = 0;
-    let currentTime = 0;
-    let animationFrameId: number;
-
-    const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container || !video.duration) return;
-
-      const rect = container.getBoundingClientRect();
-      const containerHeight = container.offsetHeight - window.innerHeight;
-
-      if (containerHeight > 0) {
-        const rawProgress = Math.max(0, Math.min(1, -rect.top / containerHeight));
-        targetTime = rawProgress * video.duration;
-      }
-    };
-
-    const updateVideoTime = () => {
-      // Smooth linear interpolation (lerp) for butter-smooth animation without lag
-      const diff = targetTime - currentTime;
-      if (Math.abs(diff) > 0.001) {
-        currentTime += diff * 0.12; // Adjust smoothing weight
-        if (Number.isFinite(currentTime) && currentTime >= 0 && currentTime <= video.duration) {
-          video.currentTime = currentTime;
-        }
-      }
-      animationFrameId = requestAnimationFrame(updateVideoTime);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    animationFrameId = requestAnimationFrame(updateVideoTime);
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(animationFrameId);
-    };
+    video.playbackRate = 1.25;
+    video.play().catch(() => {
+      // Autoplay fallback if blocked by browser
+    });
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-[#681403]">
+    <div className="relative h-screen bg-[#681403] w-full">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#681403] select-none">
         <video
           ref={videoRef}
           src="/videos/restaurant_3d.mp4"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu will-change-auto"
+          autoPlay
           muted
+          loop
           playsInline
           preload="auto"
         />
