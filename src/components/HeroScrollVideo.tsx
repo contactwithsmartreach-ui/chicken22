@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronDown, Loader2 } from "lucide-react";
 
 export const HeroScrollVideo = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -10,6 +10,7 @@ export const HeroScrollVideo = () => {
   const framesRef = useRef<(ImageBitmap | HTMLImageElement)[]>([]);
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
+  const [isReady, setIsReady] = useState(false);
 
   const totalFrames = 60;
 
@@ -66,6 +67,11 @@ export const HeroScrollVideo = () => {
             img.src = offscreenCanvas.toDataURL("image/jpeg", 0.9);
             frames.push(img);
           }
+        }
+
+        // As soon as we have at least the first frame, mark as ready instantly!
+        if (frames.length === 1) {
+          setIsReady(true);
         }
 
         currentFrame++;
@@ -135,14 +141,12 @@ export const HeroScrollVideo = () => {
 
       const frames = framesRef.current;
       
-      // If frames are loaded, ensure we default to index 0 or higher
       const activeIndex = frames.length > 0 ? Math.min(
         frames.length - 1,
         Math.max(0, Math.floor(currentProgressRef.current * (frames.length - 1)))
       ) : 0;
 
-      // Clear canvas with white/neutral so there's no black flash
-      ctx.fillStyle = "#1a0501";
+      ctx.fillStyle = "#681403";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const frame = frames.length > 0 ? frames[activeIndex] : null;
@@ -187,8 +191,15 @@ export const HeroScrollVideo = () => {
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#681403] select-none">
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full block transform-gpu will-change-transform"
+          className={`absolute inset-0 w-full h-full block transform-gpu will-change-transform transition-opacity duration-300 ${isReady ? "opacity-100" : "opacity-0"}`}
         />
+
+        {!isReady && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#681403] text-white z-30 gap-3">
+            <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+            <span className="text-xs uppercase tracking-widest text-amber-300 font-medium">Preparing Experience...</span>
+          </div>
+        )}
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-80 animate-bounce">
           <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90">
