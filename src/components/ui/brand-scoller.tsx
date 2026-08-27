@@ -23,20 +23,17 @@ export const BrandScroller = () => {
           animation: marqueeReverse 35s linear infinite;
         }
         .neon-glow {
-          color: #fff;
+          color: #221c19;
           text-shadow: 
-            0 0 5px rgba(251, 191, 36, 0.4),
-            0 0 10px rgba(251, 191, 36, 0.3),
-            0 0 20px rgba(251, 191, 36, 0.2),
-            0 0 40px rgba(251, 191, 36, 0.1);
+            0 0 4px rgba(228, 61, 18, 0.3),
+            0 0 12px rgba(228, 61, 18, 0.2);
         }
         .neon-glow:hover {
-          color: #fde047;
+          color: #E43D12;
           text-shadow: 
-            0 0 8px rgba(253, 224, 71, 0.8),
-            0 0 15px rgba(253, 224, 71, 0.6),
-            0 0 30px rgba(251, 191, 36, 0.4),
-            0 0 60px rgba(251, 191, 36, 0.2);
+            0 0 8px rgba(228, 61, 18, 0.6),
+            0 0 20px rgba(214, 83, 109, 0.5),
+            0 0 35px rgba(239, 177, 29, 0.4);
         }
       `}</style>
 
