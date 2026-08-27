@@ -73,6 +73,9 @@ export const ExploreGallery = () => {
 
   return (
     <section id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+      {/* Top seamless blend gradient */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#8b1e06] to-transparent pointer-events-none z-20" />
+
       {/* Background Decorative Gradient Blobs */}
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFA2B6]/20 rounded-full blur-3xl pointer-events-none" />
@@ -214,6 +217,9 @@ export const ExploreGallery = () => {
           </div>
         </div>
       )}
+
+      {/* Bottom seamless blend gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#681403] pointer-events-none z-20" />
     </section>
   );
 };

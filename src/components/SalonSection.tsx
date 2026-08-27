@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 export const SalonSection = () => {
   return (
     <section id="salon" className="py-36 px-6 lg:px-16 bg-gradient-to-t from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+      {/* Top seamless blend gradient */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#681403] to-transparent pointer-events-none z-20" />
+
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
         <div className="lg:col-span-6 space-y-8">
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight leading-none text-white">
