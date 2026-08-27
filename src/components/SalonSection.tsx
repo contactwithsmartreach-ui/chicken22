@@ -37,7 +37,7 @@ export const SalonSection = () => {
 
           <div className="pt-4">
             <ReservationModal>
-              <Button className="bg-[#EFB11D] hover:bg-[#d69d12] text-neutral-950 font-bold px-8 py-6 rounded-3xl shadow-xl text-base transition-all">
+              <Button className="bg-[#EFB11D] hover:bg-[#d69d12] text-neutral-950 font-bold px-8 py-6 text-base transition-all">
                 Reserve Your Table Now
               </Button>
             </ReservationModal>
