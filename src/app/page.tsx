@@ -1,7 +1,6 @@
 import { HeroScrollVideo } from "@/components/HeroScrollVideo";
 import { Navigation } from "@/components/Navigation";
 import { ExploreGallery } from "@/components/ExploreGallery";
-import { PhilosophySection } from "@/components/PhilosophySection";
 import { SalonSection } from "@/components/SalonSection";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 
@@ -10,16 +9,13 @@ export default function Home() {
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-amber-400 selection:text-neutral-950">
       <Navigation />
 
-      {/* 3D Scrollable Video Hero Section (Locked & Preserved) */}
+      {/* 3D Scrollable Video Hero Section */}
       <div id="explore">
         <HeroScrollVideo />
       </div>
 
-      {/* Explore-Only Dish Catalogue (No ordering) */}
+      {/* Explore-Only Dish Catalogue */}
       <ExploreGallery />
-
-      {/* Minimalist Philosophy Section with Big Letters */}
-      <PhilosophySection />
 
       {/* Salon Location & Reservation */}
       <SalonSection />
