@@ -85,7 +85,7 @@ export const ExploreGallery = () => {
       </div>
 
       {/* Brand Scroller Ticker Integration */}
-      <div className="mb-16 space-y-4 py-4 border-y border-neutral-900 bg-neutral-900/40 backdrop-blur-sm text-neutral-400">
+      <div className="mb-16 space-y-4 py-4 border-y border-neutral-900 bg-transparent text-neutral-400">
         <BrandScroller />
         <BrandScrollerReverse />
       </div>

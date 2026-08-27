@@ -1,7 +1,5 @@
 "use client";
  
-import { Utensils, Sparkles, Flame, Wine, Crown, Star, Coffee, Award } from "lucide-react";
- 
 export const BrandScroller = () => {
   return (
     <>
@@ -26,42 +24,34 @@ export const BrandScroller = () => {
         }
       `}</style>
 
-      <div className="flex overflow-hidden py-3 max-w-full [mask-image:linear-gradient(to_right,_rgba(0,_0,_0,_0),rgba(0,_0,_0,_1)_15%,rgba(0,_0,_0,_1)_85%,rgba(0,_0,_0,_0))]">
+      <div className="flex overflow-hidden py-3 max-w-full [mask-image:linear-gradient(to_right,_rgba(0,_0,_0,_0),rgba(0,_0,_0,_1)_15%,rgba(0,_0,_0,_1)_85%,rgba(0,_0,_0,_0))] bg-transparent border-0">
         <div className="animate-marquee-custom flex items-center gap-16 shrink-0 pr-16">
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Crown size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Truffled Hokkaido Scallop Carpaccio</span>
-          </div>
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Flame size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">A5 Wagyu Striploin with Bone Marrow Glaze</span>
-          </div>
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Sparkles size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">The Golden Sphere 3D Chocolate Dome</span>
-          </div>
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Wine size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Smoked Rosemary Old Fashioned Elixir</span>
-          </div>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            Truffled Hokkaido Scallop Carpaccio
+          </span>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            A5 Wagyu Striploin with Bone Marrow Glaze
+          </span>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            The Golden Sphere 3D Chocolate Dome
+          </span>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            Smoked Rosemary Old Fashioned Elixir
+          </span>
         </div>
         <div className="animate-marquee-custom flex items-center gap-16 shrink-0 pr-16" aria-hidden="true">
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Crown size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Truffled Hokkaido Scallop Carpaccio</span>
-          </div>
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Flame size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">A5 Wagyu Striploin with Bone Marrow Glaze</span>
-          </div>
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Sparkles size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">The Golden Sphere 3D Chocolate Dome</span>
-          </div>
-          <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-            <Wine size={22} className="text-amber-400" />
-            <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Smoked Rosemary Old Fashioned Elixir</span>
-          </div>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            Truffled Hokkaido Scallop Carpaccio
+          </span>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            A5 Wagyu Striploin with Bone Marrow Glaze
+          </span>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            The Golden Sphere 3D Chocolate Dome
+          </span>
+          <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+            Smoked Rosemary Old Fashioned Elixir
+          </span>
         </div>
       </div>
     </>
@@ -70,42 +60,34 @@ export const BrandScroller = () => {
  
 export const BrandScrollerReverse = () => {
   return (
-    <div className="flex overflow-hidden py-3 max-w-full [mask-image:linear-gradient(to_right,_rgba(0,_0,_0,_0),rgba(0,_0,_0,_1)_15%,rgba(0,_0,_0,_1)_85%,rgba(0,_0,_0,_0))]">
+    <div className="flex overflow-hidden py-3 max-w-full [mask-image:linear-gradient(to_right,_rgba(0,_0,_0,_0),rgba(0,_0,_0,_1)_15%,rgba(0,_0,_0,_1)_85%,rgba(0,_0,_0,_0))] bg-transparent border-0">
       <div className="animate-marquee-reverse-custom flex items-center gap-16 shrink-0 pr-16">
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Award size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Hudson Valley Foie Gras Torchon</span>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Star size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Pan-Seared Chilean Sea Bass in Saffron Dashi</span>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Coffee size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Valrhona 70% Dark Chocolate Soufflé</span>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Utensils size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Oscietra Imperial Caviar Tartlet</span>
-        </div>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Hudson Valley Foie Gras Torchon
+        </span>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Pan-Seared Chilean Sea Bass in Saffron Dashi
+        </span>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Valrhona 70% Dark Chocolate Soufflé
+        </span>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Oscietra Imperial Caviar Tartlet
+        </span>
       </div>
       <div className="animate-marquee-reverse-custom flex items-center gap-16 shrink-0 pr-16" aria-hidden="true">
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Award size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Hudson Valley Foie Gras Torchon</span>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Star size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Pan-Seared Chilean Sea Bass in Saffron Dashi</span>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Coffee size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Valrhona 70% Dark Chocolate Soufflé</span>
-        </div>
-        <div className="flex items-center gap-3 text-neutral-300 hover:text-amber-400 transition-colors">
-          <Utensils size={22} className="text-amber-400" />
-          <span className="text-sm font-semibold tracking-wider uppercase opacity-90">Oscietra Imperial Caviar Tartlet</span>
-        </div>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Hudson Valley Foie Gras Torchon
+        </span>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Pan-Seared Chilean Sea Bass in Saffron Dashi
+        </span>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Valrhona 70% Dark Chocolate Soufflé
+        </span>
+        <span className="text-sm font-serif italic font-semibold tracking-wider uppercase text-neutral-300 hover:text-amber-400 transition-colors whitespace-nowrap">
+          Oscietra Imperial Caviar Tartlet
+        </span>
       </div>
     </div>
   );
