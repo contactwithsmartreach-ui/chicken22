@@ -8,8 +8,8 @@ export const HeroScrollVideo = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const framesRef = useRef<(ImageBitmap | HTMLImageElement)[]>([]);
-  const targetProgressRef = useRef(0.05); // Start slightly ahead so initial frame renders immediately
-  const currentProgressRef = useRef(0.05);
+  const targetProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
 
   const totalFrames = 60;
 
@@ -58,12 +58,12 @@ export const HeroScrollVideo = () => {
               frames.push(bitmap);
             } else {
               const img = new Image();
-              img.src = offscreenCanvas.toDataURL("image/jpeg", 0.85);
+              img.src = offscreenCanvas.toDataURL("image/jpeg", 0.9);
               frames.push(img);
             }
           } catch {
             const img = new Image();
-            img.src = offscreenCanvas.toDataURL("image/jpeg", 0.85);
+            img.src = offscreenCanvas.toDataURL("image/jpeg", 0.9);
             frames.push(img);
           }
         }
@@ -131,40 +131,44 @@ export const HeroScrollVideo = () => {
 
     const render = () => {
       const diff = targetProgressRef.current - currentProgressRef.current;
-      currentProgressRef.current += diff * 0.12;
+      currentProgressRef.current += diff * 0.15;
 
       const frames = framesRef.current;
-      if (frames.length > 0) {
-        const frameIndex = Math.min(
-          frames.length - 1,
-          Math.max(0, Math.floor(currentProgressRef.current * (frames.length - 1)))
-        );
+      
+      // If frames are loaded, ensure we default to index 0 or higher
+      const activeIndex = frames.length > 0 ? Math.min(
+        frames.length - 1,
+        Math.max(0, Math.floor(currentProgressRef.current * (frames.length - 1)))
+      ) : 0;
 
-        const frame = frames[frameIndex];
-        if (frame) {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const screenW = window.innerWidth;
-          const screenH = window.innerHeight;
+      // Clear canvas with white/neutral so there's no black flash
+      ctx.fillStyle = "#1a0501";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          const imgW = frame.width;
-          const imgH = frame.height;
+      const frame = frames.length > 0 ? frames[activeIndex] : null;
+      if (frame) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const screenW = window.innerWidth;
+        const screenH = window.innerHeight;
 
-          const hRatio = screenW / imgW;
-          const vRatio = screenH / imgH;
-          const ratio = Math.max(hRatio, vRatio);
+        const imgW = frame.width;
+        const imgH = frame.height;
 
-          const renderW = imgW * ratio;
-          const renderH = imgH * ratio;
-          const offsetX = (screenW - renderW) / 2;
-          const offsetY = (screenH - renderH) / 2;
+        const hRatio = screenW / imgW;
+        const vRatio = screenH / imgH;
+        const ratio = Math.max(hRatio, vRatio);
 
-          ctx.save();
-          ctx.scale(dpr, dpr);
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
-          ctx.drawImage(frame, 0, 0, imgW, imgH, offsetX, offsetY, renderW, renderH);
-          ctx.restore();
-        }
+        const renderW = imgW * ratio;
+        const renderH = imgH * ratio;
+        const offsetX = (screenW - renderW) / 2;
+        const offsetY = (screenH - renderH) / 2;
+
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(frame, 0, 0, imgW, imgH, offsetX, offsetY, renderW, renderH);
+        ctx.restore();
       }
 
       rafId = requestAnimationFrame(render);
@@ -179,14 +183,12 @@ export const HeroScrollVideo = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-neutral-950">
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black select-none">
+    <div ref={containerRef} className="relative h-[400vh] bg-[#681403]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#681403] select-none">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full block transform-gpu will-change-transform"
         />
-
-        <div className="absolute inset-0 bg-neutral-950/10 pointer-events-none" />
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-80 animate-bounce">
           <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-amber-300/90">
