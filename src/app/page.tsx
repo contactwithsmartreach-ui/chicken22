@@ -3,11 +3,13 @@ import { Navigation } from "@/components/Navigation";
 import { ExploreGallery } from "@/components/ExploreGallery";
 import { RunningCardsMenu } from "@/components/RunningCardsMenu";
 import { SalonSection } from "@/components/SalonSection";
+import { BackgroundParticleAnimation } from "@/components/BackgroundParticleAnimation";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#681403] text-white">
+    <div className="min-h-screen bg-[#681403] text-white relative">
+      <BackgroundParticleAnimation />
       <Navigation />
 
       {/* 3D Scrollable Video Hero Section (untouched dark theme) */}
@@ -27,7 +29,7 @@ export default function Home() {
       <SalonSection />
 
       {/* Footer */}
-      <footer className="py-16 px-6 lg:px-16 border-t border-white/15 bg-[#520f02] flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-white/70">
+      <footer className="py-16 px-6 lg:px-16 border-t border-white/15 bg-[#520f02] flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-white/70 relative z-20">
         <div className="flex items-center gap-2">
           <span className="font-serif font-bold text-white tracking-wider text-base">L'ÉLIXIR</span>
         </div>
