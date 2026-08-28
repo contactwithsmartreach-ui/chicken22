@@ -59,7 +59,7 @@ const circularMenuData = [
 export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [hasScrolledIn, setHasScrolledIn] = useState(false);
+  const [hasScrolledIn, setHasScrolledIn] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,7 +67,7 @@ export const RunningCardsMenu = () => {
     const handleScroll = () => {
       if (!ref.current) return;
       const rect = ref.current.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.75) {
+      if (rect.top < window.innerHeight) {
         setHasScrolledIn(true);
       }
     };
@@ -107,7 +107,7 @@ export const RunningCardsMenu = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Title Header */}
-      <div className={`text-center mb-12 px-6 relative z-10 transition-all duration-700 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-12"}`}>
+      <div className={`text-center mb-12 px-6 relative z-10 transition-all duration-500 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
         <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
           Immersive Experience
         </span>
@@ -117,7 +117,7 @@ export const RunningCardsMenu = () => {
       </div>
 
       {/* Running Marquee Cards Track */}
-      <div className={`w-full transition-all duration-700 delay-300 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
+      <div className={`w-full transition-all duration-500 delay-150 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
         <div
           ref={scrollRef}
           onMouseEnter={() => setIsHovered(true)}
