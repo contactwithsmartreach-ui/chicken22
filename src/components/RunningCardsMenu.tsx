@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const runningCardsData = [
+const circularMenuData = [
   {
     id: 1,
     title: "Celestial Lumina",
@@ -57,44 +57,126 @@ const runningCardsData = [
 ];
 
 export const RunningCardsMenu = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCard, setSelectedCard] = useState<any>(null);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const totalCards = circularMenuData.length;
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % totalCards);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
+  };
 
   return (
-    <section className="py-20 bg-[#681403] text-white relative overflow-hidden">
-      {/* Manual Sideways Scrolling Track with Full Image 3D Cards */}
-      <div
-        ref={scrollRef}
-        className="flex gap-8 overflow-x-auto px-6 lg:px-16 py-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {runningCardsData.map((card) => (
-          <div
-            key={card.id}
-            onClick={() => setSelectedCard(card)}
-            className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/20 shadow-2xl transition-all duration-700 hover:border-[#EFB11D] hover:-translate-y-3"
-          >
-            {/* Full Screen Background Image */}
-            <img
-              src={card.image}
-              alt={card.title}
-              className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-            />
-            
-            {/* Dark Cinematic Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90 group-hover:opacity-85 transition-opacity" />
+    <section className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
-            {/* Bottom Content Area */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-[#EFB11D] transition-colors leading-tight">
-                {card.title}
-              </h3>
-              <p className="text-white/80 text-xs sm:text-sm line-clamp-3 leading-relaxed">
-                {card.description}
-              </p>
+      {/* Circular Carousel Stage */}
+      <div className="relative w-full max-w-5xl h-[450px] sm:h-[500px] flex items-center justify-center perspective-[1200px]">
+        {circularMenuData.map((card, index) => {
+          // Calculate relative position from current index
+          const offset = (index - currentIndex + totalCards) % totalCards;
+          // Normalize offset for circular layout (-3 to +3 or similar)
+          let angle = (index - currentIndex) * (360 / totalCards);
+          
+          // Determine scale and opacity based on proximity to active index (offset === 0)
+          const isActive = offset === 0;
+          const isPrev = offset === totalCards - 1;
+          const isNext = offset === 1;
+
+          // Compute transform values for circular 3D rotunda effect
+          const radius = 280; // Distance from center
+          const radian = (angle * Math.PI) / 180;
+          const x = Math.sin(radian) * radius;
+          const z = Math.cos(radian) * radius - radius; // Depth
+          const scale = isActive ? 1.05 : isPrev || isNext ? 0.8 : 0.65;
+          const opacity = isActive ? 1 : isPrev || isNext ? 0.75 : 0.3;
+          const zIndex = isActive ? 30 : isPrev || isNext ? 20 : 10;
+          const pointerEvents = isActive || isPrev || isNext ? "auto" : "none";
+
+          return (
+            <div
+              key={card.id}
+              onClick={() => {
+                if (isActive) {
+                  setSelectedCard(card);
+                } else {
+                  setCurrentIndex(index);
+                }
+              }}
+              style={{
+                transform: `translate3d(${x}px, 0, ${z}px) scale(${scale})`,
+                opacity: opacity,
+                zIndex: zIndex,
+                pointerEvents: pointerEvents as any,
+              }}
+              className={`absolute w-[280px] sm:w-[320px] h-[420px] sm:h-[460px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out border shadow-2xl ${
+                isActive
+                  ? "border-[#EFB11D] shadow-[#EFB11D]/20 ring-4 ring-[#EFB11D]/20"
+                  : "border-white/20 hover:border-white/40"
+              }`}
+            >
+              {/* Card Image */}
+              <img
+                src={card.image}
+                alt={card.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90" />
+
+              {/* Card Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
+                <span className="text-[#EFB11D] text-xs font-semibold tracking-wider uppercase mb-1">
+                  {card.category}
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight">
+                  {card.title}
+                </h3>
+                <p className="text-white/80 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                  {card.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="flex items-center gap-6 mt-8 relative z-40">
+        <button
+          onClick={handlePrev}
+          className="w-12 h-12 rounded-full bg-black/60 border border-white/25 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all shadow-xl active:scale-95"
+          aria-label="Previous card"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
+        <div className="flex items-center gap-2">
+          {circularMenuData.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentIndex === idx ? "w-8 bg-[#EFB11D]" : "w-2 bg-white/30 hover:bg-white/60"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={handleNext}
+          className="w-12 h-12 rounded-full bg-black/60 border border-white/25 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all shadow-xl active:scale-95"
+          aria-label="Next card"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
       </div>
 
       {/* Modal for Clickable Card Inspection */}
