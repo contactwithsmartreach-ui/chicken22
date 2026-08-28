@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Sparkles, Eye, X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -60,56 +60,17 @@ export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.75;
-      scrollRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const handleOrder = (title: string, e: React.MouseEvent) => {
     e.stopPropagation();
     toast.success(`${title} added to your tasting selection!`);
   };
 
   return (
-    <section className="py-28 bg-[#681403] text-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#EFB11D]/15 border border-[#EFB11D]/40 text-[#EFB11D] text-xs tracking-widest uppercase mb-4 font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            Immersive 3D Gallery
-          </div>
-          <h2 className="text-4xl sm:text-6xl font-serif font-light tracking-tight text-white">
-            Infinite <span className="italic font-normal text-[#EFB11D]">Gastronomy</span>
-          </h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => scroll("left")}
-            className="w-12 h-12 rounded-full bg-black/40 border border-white/20 flex items-center justify-center hover:bg-[#EFB11D] hover:text-neutral-950 transition-colors shadow-lg"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            className="w-12 h-12 rounded-full bg-black/40 border border-white/20 flex items-center justify-center hover:bg-[#EFB11D] hover:text-neutral-950 transition-colors shadow-lg"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
-      </div>
-
+    <section className="py-20 bg-[#681403] text-white relative overflow-hidden">
       {/* Manual Sideways Scrolling Track with Full Image 3D Cards */}
       <div
         ref={scrollRef}
-        className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
+        className="flex gap-8 overflow-x-auto px-6 lg:px-16 py-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {runningCardsData.map((card, idx) => (
