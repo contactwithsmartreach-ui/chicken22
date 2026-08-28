@@ -59,7 +59,22 @@ const circularMenuData = [
 export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [hasScrolledIn, setHasScrolledIn] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.75) {
+        setHasScrolledIn(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Continuous auto-scroll loop
   useEffect(() => {
@@ -87,12 +102,12 @@ export const RunningCardsMenu = () => {
   const duplicatedCards = [...circularMenuData, ...circularMenuData, ...circularMenuData];
 
   return (
-    <section className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
+    <section ref={ref} className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Title Header */}
-      <div className="text-center mb-12 px-6 relative z-10">
+      <div className={`text-center mb-12 px-6 relative z-10 transition-all duration-700 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-12"}`}>
         <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
           Immersive Experience
         </span>
@@ -102,7 +117,7 @@ export const RunningCardsMenu = () => {
       </div>
 
       {/* Running Marquee Cards Track */}
-      <div className="w-full">
+      <div className={`w-full transition-all duration-700 delay-300 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
         <div
           ref={scrollRef}
           onMouseEnter={() => setIsHovered(true)}

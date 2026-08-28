@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { BrandScroller, BrandScrollerReverse } from "@/components/ui/brand-scoller";
 import { toast } from "sonner";
@@ -73,13 +73,28 @@ const categories = ["All Creations", "Amuse-Bouche", "Haute Cuisine", "Avant-Gar
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState("All Creations");
+  const [hasScrolledIn, setHasScrolledIn] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.75) {
+        setHasScrolledIn(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const filteredDishes = selectedCategory === "All Creations"
     ? exploreDishes
     : exploreDishes.filter(dish => dish.category === selectedCategory);
 
   return (
-    <section id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+    <section ref={ref} id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
       {/* Top seamless blend gradient */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#8b1e06] to-transparent pointer-events-none z-20" />
 
@@ -87,7 +102,7 @@ export const ExploreGallery = () => {
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFA2B6]/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
+      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10 transition-all duration-700 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-12"}`}>
         <div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none flex flex-wrap items-center gap-4">
             <span>Explore</span>
@@ -102,13 +117,13 @@ export const ExploreGallery = () => {
       </div>
 
       {/* Brand Scroller Ticker Integration */}
-      <div className="mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner">
+      <div className={`mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner transition-all duration-700 delay-150 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-12"}`}>
         <BrandScroller />
         <BrandScrollerReverse />
       </div>
 
       {/* Category Filter Pills with Glassmorphism */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10">
+      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10 transition-all duration-700 delay-300 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-12"}`}>
         <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {categories.map((cat) => (
             <button
@@ -127,7 +142,7 @@ export const ExploreGallery = () => {
       </div>
 
       {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
-      <div>
+      <div className={`transition-all duration-700 delay-450 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
         <div
           className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
