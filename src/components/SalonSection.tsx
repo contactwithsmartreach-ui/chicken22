@@ -27,26 +27,26 @@ const salonImages = [
 ];
 
 export const SalonSection = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      // Calculate how far we've scrolled into this section (0 to 1)
-      const progress = (windowHeight - rect.top) / (windowHeight + rect.height);
-      const clamped = Math.max(0, Math.min(1, progress));
-      setScrollProgress(clamped);
-    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   const handleNext = () => {
@@ -73,7 +73,7 @@ export const SalonSection = () => {
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#681403] to-transparent pointer-events-none z-20" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
-        <div className="lg:col-span-6 space-y-8">
+        <div className={`lg:col-span-6 space-y-8 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"}`}>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight leading-none text-white">
             An Oasis of <span className="italic font-normal text-[#EFB11D]">Refinement</span>
           </h2>
@@ -97,17 +97,10 @@ export const SalonSection = () => {
           </div>
         </div>
 
-        {/* Scroll-Linked Progressive Dropping Animation Container */}
-        <div className="lg:col-span-6 relative">
+        {/* Dropping Animation Image Scroller Component */}
+        <div className={`lg:col-span-6 relative transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-24 opacity-0 scale-95"}`}>
           <div className="absolute -inset-4 bg-black/30 rounded-3xl blur-3xl pointer-events-none" />
-          <div 
-            style={{
-              transform: `translateY(${(1 - Math.min(scrollProgress * 1.5, 1)) * -80}px) scale(${0.9 + Math.min(scrollProgress * 1.5, 1) * 0.1})`,
-              opacity: Math.min(scrollProgress * 2, 1),
-              transition: "transform 0.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease-out"
-            }}
-            className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group"
-          >
+          <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group">
             
             {/* Scroller Track */}
             <div
@@ -118,16 +111,12 @@ export const SalonSection = () => {
               {salonImages.map((img, idx) => (
                 <div
                   key={idx}
-                  className="w-full flex-shrink-0 snap-center relative h-[520px] overflow-hidden group/item"
+                  className="w-full flex-shrink-0 snap-center relative h-[520px]"
                 >
                   <img
                     src={img.url}
                     alt={img.title}
-                    style={{
-                      transform: `translateY(${(1 - Math.min(scrollProgress * 1.8, 1)) * (-40 - idx * 15)}px) scale(${1 + (idx * 0.02)})`,
-                      transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
-                    }}
-                    className="w-full h-full object-cover group-hover/item:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 sm:p-8">
                     <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-1">
