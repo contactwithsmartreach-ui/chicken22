@@ -59,7 +59,26 @@ const circularMenuData = [
 export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   // Continuous auto-scroll loop
   useEffect(() => {
@@ -67,12 +86,11 @@ export const RunningCardsMenu = () => {
     if (!scrollContainer) return;
 
     let animationFrameId: number;
-    let speed = 1.2; // Speed of auto scroll
+    let speed = 1.2;
 
     const autoScroll = () => {
       if (!isHovered && scrollContainer) {
         scrollContainer.scrollLeft += speed;
-        // Infinite loop effect
         if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
           scrollContainer.scrollLeft = 0;
         }
@@ -85,16 +103,15 @@ export const RunningCardsMenu = () => {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isHovered]);
 
-  // Duplicate data array for seamless infinite looping
   const duplicatedCards = [...circularMenuData, ...circularMenuData, ...circularMenuData];
 
   return (
-    <section className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
+    <section ref={sectionRef} className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Title Header */}
-      <div className="text-center mb-12 px-6 relative z-10">
+      <div className={`text-center mb-12 px-6 relative z-10 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-16 opacity-0"}`}>
         <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
           Immersive Experience
         </span>
@@ -103,46 +120,50 @@ export const RunningCardsMenu = () => {
         </h2>
       </div>
 
-      {/* Running Marquee Cards Track (Draggable, Touch-friendly, Infinite 24/7 auto scroll) */}
+      {/* Running Marquee Cards Track */}
       <div
-        ref={scrollRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onTouchStart={() => setIsHovered(true)}
-        onTouchEnd={() => setIsHovered(false)}
-        className="w-full flex gap-8 overflow-x-auto px-6 py-8 no-scrollbar cursor-grab active:cursor-grabbing select-none relative z-20"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className={`w-full transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-24 opacity-0 scale-95"}`}
       >
-        {duplicatedCards.map((card, idx) => (
-          <div
-            key={`${card.id}-${idx}`}
-            onClick={() => setSelectedCard(card)}
-            className="group relative flex-shrink-0 w-[300px] sm:w-[340px] h-[450px] rounded-3xl overflow-hidden cursor-pointer border border-white/20 shadow-2xl transition-all duration-500 hover:border-[#EFB11D] hover:-translate-y-3"
-          >
-            {/* Card Image */}
-            <img
-              src={card.image}
-              alt={card.title}
-              className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110 pointer-events-none"
-            />
+        <div
+          ref={scrollRef}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={() => setIsHovered(true)}
+          onTouchEnd={() => setIsHovered(false)}
+          className="w-full flex gap-8 overflow-x-auto px-6 py-8 no-scrollbar cursor-grab active:cursor-grabbing select-none relative z-20"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {duplicatedCards.map((card, idx) => (
+            <div
+              key={`${card.id}-${idx}`}
+              onClick={() => setSelectedCard(card)}
+              className="group relative flex-shrink-0 w-[300px] sm:w-[340px] h-[450px] rounded-3xl overflow-hidden cursor-pointer border border-white/20 shadow-2xl transition-all duration-500 hover:border-[#EFB11D] hover:-translate-y-3"
+            >
+              {/* Card Image */}
+              <img
+                src={card.image}
+                alt={card.title}
+                className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110 pointer-events-none"
+              />
 
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90 group-hover:opacity-85 transition-opacity" />
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90 group-hover:opacity-85 transition-opacity" />
 
-            {/* Card Content */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
-              <span className="text-[#EFB11D] text-xs font-semibold tracking-wider uppercase mb-1">
-                {card.category}
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight group-hover:text-[#EFB11D] transition-colors">
-                {card.title}
-              </h3>
-              <p className="text-white/80 text-xs sm:text-sm line-clamp-2 leading-relaxed">
-                {card.description}
-              </p>
+              {/* Card Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
+                <span className="text-[#EFB11D] text-xs font-semibold tracking-wider uppercase mb-1">
+                  {card.category}
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight group-hover:text-[#EFB11D] transition-colors">
+                  {card.title}
+                </h3>
+                <p className="text-white/80 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                  {card.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Modal for Clickable Card Inspection */}

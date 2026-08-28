@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
 import { BrandScroller, BrandScrollerReverse } from "@/components/ui/brand-scoller";
 import { toast } from "sonner";
@@ -73,14 +73,32 @@ const categories = ["All Creations", "Amuse-Bouche", "Haute Cuisine", "Avant-Gar
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState("All Creations");
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const filteredDishes = selectedCategory === "All Creations"
     ? exploreDishes
     : exploreDishes.filter(dish => dish.category === selectedCategory);
 
   return (
-    <section id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+    <section ref={sectionRef} id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
       {/* Top seamless blend gradient */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#8b1e06] to-transparent pointer-events-none z-20" />
 
@@ -88,7 +106,7 @@ export const ExploreGallery = () => {
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFA2B6]/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
+      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-16 opacity-0"}`}>
         <div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none flex flex-wrap items-center gap-4">
             <span>Explore</span>
@@ -103,13 +121,13 @@ export const ExploreGallery = () => {
       </div>
 
       {/* Brand Scroller Ticker Integration */}
-      <div className="mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner">
+      <div className={`mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner transform transition-all duration-1000 delay-200 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-12 opacity-0"}`}>
         <BrandScroller />
         <BrandScrollerReverse />
       </div>
 
       {/* Category Filter Pills with Glassmorphism */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10">
+      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10 transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"}`}>
         <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {categories.map((cat) => (
             <button
@@ -129,37 +147,40 @@ export const ExploreGallery = () => {
 
       {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
       <div
-        ref={scrollRef}
-        className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className={`transform transition-all duration-1000 delay-400 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-20 opacity-0 scale-95"}`}
       >
-        {filteredDishes.map((dish) => (
-          <div
-            key={dish.id}
-            onClick={() => setActiveModalDish(dish)}
-            className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/25 shadow-2xl transition-all duration-700 hover:border-[#EFB11D] hover:-translate-y-3"
-          >
-            {/* Full Screen Background Image */}
-            <img
-              src={dish.image}
-              alt={dish.name}
-              className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-            />
-            
-            {/* Dark Cinematic Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent opacity-95 group-hover:opacity-90 transition-opacity" />
+        <div
+          className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {filteredDishes.map((dish) => (
+            <div
+              key={dish.id}
+              onClick={() => setActiveModalDish(dish)}
+              className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/25 shadow-2xl transition-all duration-700 hover:border-[#EFB11D] hover:-translate-y-3"
+            >
+              {/* Full Screen Background Image */}
+              <img
+                src={dish.image}
+                alt={dish.name}
+                className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+              />
+              
+              {/* Dark Cinematic Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent opacity-95 group-hover:opacity-90 transition-opacity" />
 
-            {/* Bottom Content Area */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-[#EFB11D] transition-colors leading-tight">
-                {dish.name}
-              </h3>
-              <p className="text-white/80 text-xs sm:text-sm line-clamp-3 leading-relaxed">
-                {dish.description}
-              </p>
+              {/* Bottom Content Area */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-[#EFB11D] transition-colors leading-tight">
+                  {dish.name}
+                </h3>
+                <p className="text-white/80 text-xs sm:text-sm line-clamp-3 leading-relaxed">
+                  {dish.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Dish Inspection Modal with Glassmorphism */}
