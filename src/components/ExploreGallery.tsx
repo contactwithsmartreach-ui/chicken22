@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { X } from "lucide-react";
 import { BrandScroller, BrandScrollerReverse } from "@/components/ui/brand-scoller";
 import { toast } from "sonner";
@@ -73,32 +73,13 @@ const categories = ["All Creations", "Amuse-Bouche", "Haute Cuisine", "Avant-Gar
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState("All Creations");
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   const filteredDishes = selectedCategory === "All Creations"
     ? exploreDishes
     : exploreDishes.filter(dish => dish.category === selectedCategory);
 
   return (
-    <section ref={sectionRef} id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+    <section id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
       {/* Top seamless blend gradient */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#8b1e06] to-transparent pointer-events-none z-20" />
 
@@ -106,7 +87,7 @@ export const ExploreGallery = () => {
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFA2B6]/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-16 opacity-0"}`}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
         <div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none flex flex-wrap items-center gap-4">
             <span>Explore</span>
@@ -121,13 +102,13 @@ export const ExploreGallery = () => {
       </div>
 
       {/* Brand Scroller Ticker Integration */}
-      <div className={`mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner transform transition-all duration-1000 delay-200 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-12 opacity-0"}`}>
+      <div className="mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner">
         <BrandScroller />
         <BrandScrollerReverse />
       </div>
 
       {/* Category Filter Pills with Glassmorphism */}
-      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10 transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"}`}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10">
         <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {categories.map((cat) => (
             <button
@@ -146,9 +127,7 @@ export const ExploreGallery = () => {
       </div>
 
       {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
-      <div
-        className={`transform transition-all duration-1000 delay-400 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-20 opacity-0 scale-95"}`}
-      >
+      <div>
         <div
           className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}

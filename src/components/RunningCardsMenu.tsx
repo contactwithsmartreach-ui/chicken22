@@ -59,26 +59,7 @@ const circularMenuData = [
 export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   // Continuous auto-scroll loop
   useEffect(() => {
@@ -106,12 +87,12 @@ export const RunningCardsMenu = () => {
   const duplicatedCards = [...circularMenuData, ...circularMenuData, ...circularMenuData];
 
   return (
-    <section ref={sectionRef} className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
+    <section className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Title Header */}
-      <div className={`text-center mb-12 px-6 relative z-10 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-16 opacity-0"}`}>
+      <div className="text-center mb-12 px-6 relative z-10">
         <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
           Immersive Experience
         </span>
@@ -121,9 +102,7 @@ export const RunningCardsMenu = () => {
       </div>
 
       {/* Running Marquee Cards Track */}
-      <div
-        className={`w-full transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-24 opacity-0 scale-95"}`}
-      >
+      <div className="w-full">
         <div
           ref={scrollRef}
           onMouseEnter={() => setIsHovered(true)}
