@@ -27,26 +27,26 @@ const salonImages = [
 ];
 
 export const SalonSection = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      // Calculate progress of section through viewport (0 to 1)
-      const progress = (windowHeight - rect.top) / (windowHeight + rect.height);
-      const clamped = Math.max(0, Math.min(1, progress));
-      setScrollProgress(clamped);
-    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   const handleNext = () => {
@@ -73,7 +73,7 @@ export const SalonSection = () => {
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#681403] to-transparent pointer-events-none z-20" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
-        <div className="lg:col-span-6 space-y-8">
+        <div className={`lg:col-span-6 space-y-8 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"}`}>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight leading-none text-white">
             An Oasis of <span className="italic font-normal text-[#EFB11D]">Refinement</span>
           </h2>
@@ -97,31 +97,26 @@ export const SalonSection = () => {
           </div>
         </div>
 
-        {/* Cascading Step-by-Step Dropping Images */}
-        <div className="lg:col-span-6 space-y-4">
-          {salonImages.map((img, idx) => {
-            // Calculate staggered drop offset based on scroll progress
-            const staggerDelay = idx * 0.12;
-            const cardProgress = Math.max(0, Math.min(1, (scrollProgress - 0.15 - staggerDelay) * 3));
-            const translateY = (1 - cardProgress) * -80; // drop down from top
-            const opacity = cardProgress;
-            const scale = 0.9 + cardProgress * 0.1;
-
-            return (
-              <div
-                key={idx}
-                style={{
-                  transform: `translateY(${translateY}px) scale(${scale})`,
-                  opacity: opacity,
-                  transition: "transform 0.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.1s ease-out",
-                }}
-                className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group"
-              >
-                <div className="relative rounded-2xl overflow-hidden h-[360px] sm:h-[420px]">
+        {/* Dropping Animation Image Scroller Component */}
+        <div className={`lg:col-span-6 relative transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-24 opacity-0 scale-95"}`}>
+          <div className="absolute -inset-4 bg-black/30 rounded-3xl blur-3xl pointer-events-none" />
+          <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group">
+            
+            {/* Scroller Track */}
+            <div
+              ref={scrollRef}
+              className="flex overflow-x-auto snap-x snap-mandatory rounded-2xl no-scrollbar scroll-smooth"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {salonImages.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-full flex-shrink-0 snap-center relative h-[520px]"
+                >
                   <img
                     src={img.url}
                     alt={img.title}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 sm:p-8">
                     <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-1">
@@ -132,9 +127,46 @@ export const SalonSection = () => {
                     </h3>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              ))}
+            </div>
+
+            {/* Scroller Controls */}
+            <button
+              onClick={handlePrev}
+              className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 border border-white/30 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-xl z-20"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 border border-white/30 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-xl z-20"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            {/* Pagination Dots */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+              {salonImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setCurrentIndex(idx);
+                    if (scrollRef.current) {
+                      scrollRef.current.scrollTo({ left: idx * scrollRef.current.clientWidth, behavior: "smooth" });
+                    }
+                  }}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    currentIndex === idx ? "w-6 bg-[#EFB11D]" : "w-1.5 bg-white/40 hover:bg-white"
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
