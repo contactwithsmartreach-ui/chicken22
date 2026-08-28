@@ -70,7 +70,7 @@ export const RunningCardsMenu = () => {
           setIsIntersected(true);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.05, rootMargin: "200px" }
     );
 
     if (ref.current) {
@@ -113,7 +113,7 @@ export const RunningCardsMenu = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Title Header */}
-      <div className={`text-center mb-12 px-6 relative z-10 transition-all duration-700 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-12"}`}>
+      <div className={`text-center mb-12 px-6 relative z-10 transition-all duration-300 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
         <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
           Immersive Experience
         </span>
@@ -123,7 +123,7 @@ export const RunningCardsMenu = () => {
       </div>
 
       {/* Running Marquee Cards Track */}
-      <div className={`w-full transition-all duration-700 delay-300 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-20"}`}>
+      <div className={`w-full transition-all duration-300 delay-150 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
         <div
           ref={scrollRef}
           onMouseEnter={() => setIsHovered(true)}
