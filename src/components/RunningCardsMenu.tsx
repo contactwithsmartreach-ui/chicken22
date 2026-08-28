@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Eye, X, Plus } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -60,11 +60,6 @@ export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const handleOrder = (title: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast.success(`${title} added to your tasting selection!`);
-  };
-
   return (
     <section className="py-20 bg-[#681403] text-white relative overflow-hidden">
       {/* Manual Sideways Scrolling Track with Full Image 3D Cards */}
@@ -89,37 +84,14 @@ export const RunningCardsMenu = () => {
             {/* Dark Cinematic Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90 group-hover:opacity-85 transition-opacity" />
 
-            {/* Top Badges */}
-            <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
-              <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-[#EFB11D] text-xs font-semibold tracking-wider uppercase border border-white/20 shadow-lg">
-                {card.category}
-              </span>
-              <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white font-serif font-bold text-lg border border-white/20 shadow-lg">
-                {card.price}
-              </span>
-            </div>
-
             {/* Bottom Content Area */}
             <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
               <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-[#EFB11D] transition-colors leading-tight">
                 {card.title}
               </h3>
-              <p className="text-white/80 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-6">
+              <p className="text-white/80 text-xs sm:text-sm line-clamp-3 leading-relaxed">
                 {card.description}
               </p>
-
-              <div className="flex items-center justify-between pt-4 border-t border-white/20">
-                <span className="text-xs text-[#EFB11D] font-semibold tracking-wider flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  <Eye className="w-4 h-4 mr-1" /> Inspect 3D View
-                </span>
-                <button
-                  onClick={(e) => handleOrder(card.title, e)}
-                  className="w-10 h-10 rounded-full bg-[#EFB11D] text-neutral-950 flex items-center justify-center hover:bg-[#d69d12] transition-transform active:scale-95 shadow-lg"
-                  aria-label="Add to menu"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
             </div>
           </div>
         ))}
