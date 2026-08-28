@@ -83,7 +83,7 @@ export const ExploreGallery = () => {
           setIsIntersected(true);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
     if (ref.current) {
@@ -108,7 +108,8 @@ export const ExploreGallery = () => {
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFA2B6]/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10 transition-all duration-700 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
+      {/* Element 1: Title Header */}
+      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10 transition-all duration-300 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"}`}>
         <div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none flex flex-wrap items-center gap-4">
             <span>Explore</span>
@@ -122,14 +123,14 @@ export const ExploreGallery = () => {
         </p>
       </div>
 
-      {/* Brand Scroller Ticker Integration */}
-      <div className={`mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner transition-all duration-700 delay-150 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
+      {/* Element 2: Brand Scroller Ticker */}
+      <div className={`mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner transition-all duration-300 delay-75 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"}`}>
         <BrandScroller />
         <BrandScrollerReverse />
       </div>
 
-      {/* Category Filter Pills with Glassmorphism */}
-      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10 transition-all duration-700 delay-300 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
+      {/* Element 3: Category Filter Pills */}
+      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10 transition-all duration-300 delay-100 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"}`}>
         <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {categories.map((cat) => (
             <button
@@ -147,8 +148,8 @@ export const ExploreGallery = () => {
         </div>
       </div>
 
-      {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
-      <div className={`transition-all duration-700 delay-450 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-20"}`}>
+      {/* Element 4: Horizontal Card Stream */}
+      <div className={`transition-all duration-300 delay-150 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"}`}>
         <div
           className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -157,7 +158,7 @@ export const ExploreGallery = () => {
             <div
               key={dish.id}
               onClick={() => setActiveModalDish(dish)}
-              className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/25 shadow-2xl transition-all duration-700 hover:border-[#EFB11D] hover:-translate-y-3"
+              className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/25 shadow-2xl transition-all duration-500 hover:border-[#EFB11D] hover:-translate-y-3"
             >
               {/* Full Screen Background Image */}
               <img
