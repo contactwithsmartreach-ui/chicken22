@@ -28,27 +28,21 @@ const salonImages = [
 
 export const SalonSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isIntersected, setIsIntersected] = useState(false);
+  const [hasScrolledIn, setHasScrolledIn] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsIntersected(true);
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
+    const handleScroll = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        setHasScrolledIn(true);
+      }
     };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleNext = () => {
@@ -75,7 +69,7 @@ export const SalonSection = () => {
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#681403] to-transparent pointer-events-none z-20" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
-        <div className={`lg:col-span-6 space-y-8 transition-all duration-700 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"}`}>
+        <div className={`lg:col-span-6 space-y-8 transition-all duration-500 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight leading-none text-white">
             An Oasis of <span className="italic font-normal text-[#EFB11D]">Refinement</span>
           </h2>
@@ -100,7 +94,7 @@ export const SalonSection = () => {
         </div>
 
         {/* High-Quality Image Scroller Component */}
-        <div className={`lg:col-span-6 relative transition-all duration-700 delay-300 ease-out ${isIntersected ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-24"}`}>
+        <div className={`lg:col-span-6 relative transition-all duration-500 delay-200 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
           <div className="absolute -inset-4 bg-black/30 rounded-3xl blur-3xl pointer-events-none" />
           <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group">
             
