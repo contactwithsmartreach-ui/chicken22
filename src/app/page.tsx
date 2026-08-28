@@ -1,6 +1,5 @@
 import { HeroScrollVideo } from "@/components/HeroScrollVideo";
 import { Navigation } from "@/components/Navigation";
-import { ScrollAnimationMenu } from "@/components/ScrollAnimationMenu";
 import { ExploreGallery } from "@/components/ExploreGallery";
 import { RunningCardsMenu } from "@/components/RunningCardsMenu";
 import { SalonSection } from "@/components/SalonSection";
@@ -15,11 +14,8 @@ export default function Home() {
       <div id="explore" className="relative">
         <HeroScrollVideo />
         {/* Seamless smooth gradient fade into the next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-[#8b1e06]/60 to-[#681403] pointer-events-none z-30" />
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-[#8b1e06]/60 to-[#8b1e06] pointer-events-none z-30" />
       </div>
-
-      {/* Animated Scroll Menu Representation */}
-      <ScrollAnimationMenu />
 
       {/* Explore-Only Dish Catalogue with Palette & Glassmorphism */}
       <ExploreGallery />
