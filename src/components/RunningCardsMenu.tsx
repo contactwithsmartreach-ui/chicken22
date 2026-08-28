@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -57,126 +57,92 @@ const circularMenuData = [
 ];
 
 export const RunningCardsMenu = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCard, setSelectedCard] = useState<any>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const totalCards = circularMenuData.length;
+  // Continuous auto-scroll loop
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalCards);
-  };
+    let animationFrameId: number;
+    let speed = 1.2; // Speed of auto scroll
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
-  };
+    const autoScroll = () => {
+      if (!isHovered && scrollContainer) {
+        scrollContainer.scrollLeft += speed;
+        // Infinite loop effect
+        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+          scrollContainer.scrollLeft = 0;
+        }
+      }
+      animationFrameId = requestAnimationFrame(autoScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(autoScroll);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isHovered]);
+
+  // Duplicate data array for seamless infinite looping
+  const duplicatedCards = [...circularMenuData, ...circularMenuData, ...circularMenuData];
 
   return (
     <section className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Circular Carousel Stage */}
-      <div className="relative w-full max-w-5xl h-[450px] sm:h-[500px] flex items-center justify-center perspective-[1200px]">
-        {circularMenuData.map((card, index) => {
-          // Calculate relative position from current index
-          const offset = (index - currentIndex + totalCards) % totalCards;
-          // Normalize offset for circular layout (-3 to +3 or similar)
-          let angle = (index - currentIndex) * (360 / totalCards);
-          
-          // Determine scale and opacity based on proximity to active index (offset === 0)
-          const isActive = offset === 0;
-          const isPrev = offset === totalCards - 1;
-          const isNext = offset === 1;
-
-          // Compute transform values for circular 3D rotunda effect
-          const radius = 280; // Distance from center
-          const radian = (angle * Math.PI) / 180;
-          const x = Math.sin(radian) * radius;
-          const z = Math.cos(radian) * radius - radius; // Depth
-          const scale = isActive ? 1.05 : isPrev || isNext ? 0.8 : 0.65;
-          const opacity = isActive ? 1 : isPrev || isNext ? 0.75 : 0.3;
-          const zIndex = isActive ? 30 : isPrev || isNext ? 20 : 10;
-          const pointerEvents = isActive || isPrev || isNext ? "auto" : "none";
-
-          return (
-            <div
-              key={card.id}
-              onClick={() => {
-                if (isActive) {
-                  setSelectedCard(card);
-                } else {
-                  setCurrentIndex(index);
-                }
-              }}
-              style={{
-                transform: `translate3d(${x}px, 0, ${z}px) scale(${scale})`,
-                opacity: opacity,
-                zIndex: zIndex,
-                pointerEvents: pointerEvents as any,
-              }}
-              className={`absolute w-[280px] sm:w-[320px] h-[420px] sm:h-[460px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out border shadow-2xl ${
-                isActive
-                  ? "border-[#EFB11D] shadow-[#EFB11D]/20 ring-4 ring-[#EFB11D]/20"
-                  : "border-white/20 hover:border-white/40"
-              }`}
-            >
-              {/* Card Image */}
-              <img
-                src={card.image}
-                alt={card.title}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90" />
-
-              {/* Card Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
-                <span className="text-[#EFB11D] text-xs font-semibold tracking-wider uppercase mb-1">
-                  {card.category}
-                </span>
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight">
-                  {card.title}
-                </h3>
-                <p className="text-white/80 text-xs sm:text-sm line-clamp-2 leading-relaxed">
-                  {card.description}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+      {/* Title Header */}
+      <div className="text-center mb-12 px-6 relative z-10">
+        <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
+          Immersive Experience
+        </span>
+        <h2 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-white">
+          Continuous Culinary Stream
+        </h2>
       </div>
 
-      {/* Navigation Controls */}
-      <div className="flex items-center gap-6 mt-8 relative z-40">
-        <button
-          onClick={handlePrev}
-          className="w-12 h-12 rounded-full bg-black/60 border border-white/25 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all shadow-xl active:scale-95"
-          aria-label="Previous card"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-
-        <div className="flex items-center gap-2">
-          {circularMenuData.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentIndex === idx ? "w-8 bg-[#EFB11D]" : "w-2 bg-white/30 hover:bg-white/60"
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
+      {/* Running Marquee Cards Track (Draggable, Touch-friendly, Infinite 24/7 auto scroll) */}
+      <div
+        ref={scrollRef}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={() => setIsHovered(true)}
+        onTouchEnd={() => setIsHovered(false)}
+        className="w-full flex gap-8 overflow-x-auto px-6 py-8 no-scrollbar cursor-grab active:cursor-grabbing select-none relative z-20"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {duplicatedCards.map((card, idx) => (
+          <div
+            key={`${card.id}-${idx}`}
+            onClick={() => setSelectedCard(card)}
+            className="group relative flex-shrink-0 w-[300px] sm:w-[340px] h-[450px] rounded-3xl overflow-hidden cursor-pointer border border-white/20 shadow-2xl transition-all duration-500 hover:border-[#EFB11D] hover:-translate-y-3"
+          >
+            {/* Card Image */}
+            <img
+              src={card.image}
+              alt={card.title}
+              className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110 pointer-events-none"
             />
-          ))}
-        </div>
 
-        <button
-          onClick={handleNext}
-          className="w-12 h-12 rounded-full bg-black/60 border border-white/25 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all shadow-xl active:scale-95"
-          aria-label="Next card"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90 group-hover:opacity-85 transition-opacity" />
+
+            {/* Card Content */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
+              <span className="text-[#EFB11D] text-xs font-semibold tracking-wider uppercase mb-1">
+                {card.category}
+              </span>
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight group-hover:text-[#EFB11D] transition-colors">
+                {card.title}
+              </h3>
+              <p className="text-white/80 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                {card.description}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Modal for Clickable Card Inspection */}
