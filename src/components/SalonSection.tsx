@@ -28,7 +28,26 @@ const salonImages = [
 
 export const SalonSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleNext = () => {
     const nextIndex = (currentIndex + 1) % salonImages.length;
@@ -49,12 +68,12 @@ export const SalonSection = () => {
   };
 
   return (
-    <section id="salon" className="py-36 px-6 lg:px-16 bg-gradient-to-t from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+    <section ref={sectionRef} id="salon" className="py-36 px-6 lg:px-16 bg-gradient-to-t from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
       {/* Top seamless blend gradient */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#681403] to-transparent pointer-events-none z-20" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
-        <div className="lg:col-span-6 space-y-8">
+        <div className={`lg:col-span-6 space-y-8 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"}`}>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight leading-none text-white">
             An Oasis of <span className="italic font-normal text-[#EFB11D]">Refinement</span>
           </h2>
@@ -78,8 +97,8 @@ export const SalonSection = () => {
           </div>
         </div>
 
-        {/* High-Quality Image Scroller Component */}
-        <div className="lg:col-span-6 relative">
+        {/* Dropping Animation Image Scroller Component */}
+        <div className={`lg:col-span-6 relative transform transition-all duration-1000 delay-300 ${isVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-24 opacity-0 scale-95"}`}>
           <div className="absolute -inset-4 bg-black/30 rounded-3xl blur-3xl pointer-events-none" />
           <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group">
             
@@ -97,7 +116,7 @@ export const SalonSection = () => {
                   <img
                     src={img.url}
                     alt={img.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 sm:p-8">
                     <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-1">
