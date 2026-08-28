@@ -1,9 +1,53 @@
 "use client";
 
-import React from "react";
-import { MapPin, Clock, Phone } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { MapPin, Clock, Phone, ChevronLeft, ChevronRight } from "lucide-react";
+
+const salonImages = [
+  {
+    url: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=1600",
+    title: "The Grand Dining Salon",
+    subtitle: "Acoustic-engineered private booths & bespoke chandeliers",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1600",
+    title: "Intimate Atmospheres",
+    subtitle: "Designed for exquisite conversations and culinary romance",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1600",
+    title: "The Sommelier Cellar",
+    subtitle: "Over 1,200 rare vintages curated from private European estates",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?auto=format&fit=crop&q=80&w=1600",
+    title: "Chef's Counter",
+    subtitle: "Front-row seats to avant-garde culinary artistry",
+  },
+];
 
 export const SalonSection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleNext = () => {
+    const nextIndex = (currentIndex + 1) % salonImages.length;
+    setCurrentIndex(nextIndex);
+    if (scrollRef.current) {
+      const cardWidth = scrollRef.current.clientWidth;
+      scrollRef.current.scrollTo({ left: nextIndex * cardWidth, behavior: "smooth" });
+    }
+  };
+
+  const handlePrev = () => {
+    const prevIndex = (currentIndex - 1 + salonImages.length) % salonImages.length;
+    setCurrentIndex(prevIndex);
+    if (scrollRef.current) {
+      const cardWidth = scrollRef.current.clientWidth;
+      scrollRef.current.scrollTo({ left: prevIndex * cardWidth, behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="salon" className="py-36 px-6 lg:px-16 bg-gradient-to-t from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
       {/* Top seamless blend gradient */}
@@ -34,14 +78,75 @@ export const SalonSection = () => {
           </div>
         </div>
 
+        {/* High-Quality Image Scroller Component */}
         <div className="lg:col-span-6 relative">
           <div className="absolute -inset-4 bg-black/30 rounded-3xl blur-3xl pointer-events-none" />
-          <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3">
-            <img
-              src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=1200"
-              alt="L'Élixir Interior Dining Salon"
-              className="w-full h-[520px] object-cover rounded-2xl"
-            />
+          <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-black/40 backdrop-blur-xl shadow-2xl p-3 group">
+            
+            {/* Scroller Track */}
+            <div
+              ref={scrollRef}
+              className="flex overflow-x-auto snap-x snap-mandatory rounded-2xl no-scrollbar scroll-smooth"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {salonImages.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-full flex-shrink-0 snap-center relative h-[520px]"
+                >
+                  <img
+                    src={img.url}
+                    alt={img.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 sm:p-8">
+                    <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-1">
+                      {img.subtitle}
+                    </span>
+                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white">
+                      {img.title}
+                    </h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Scroller Controls */}
+            <button
+              onClick={handlePrev}
+              className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 border border-white/30 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-xl z-20"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 border border-white/30 text-white hover:bg-[#EFB11D] hover:text-neutral-950 hover:border-[#EFB11D] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-xl z-20"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            {/* Pagination Dots */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+              {salonImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setCurrentIndex(idx);
+                    if (scrollRef.current) {
+                      scrollRef.current.scrollTo({ left: idx * scrollRef.current.clientWidth, behavior: "smooth" });
+                    }
+                  }}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    currentIndex === idx ? "w-6 bg-[#EFB11D]" : "w-1.5 bg-white/40 hover:bg-white"
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+
           </div>
         </div>
       </div>
