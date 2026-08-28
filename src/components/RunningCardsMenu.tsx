@@ -8,51 +8,51 @@ import { toast } from "sonner";
 const runningCardsData = [
   {
     id: 1,
-    title: "Truffled Hokkaido Scallop",
-    category: "Amuse-Bouche",
-    price: "$48",
-    description: "Thinly sliced diver scallops, black winter truffle shavings, Oscietra caviar, and yuzu pearl emulsion.",
-    image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&q=80&w=1000",
+    title: "Celestial Lumina",
+    category: "Haute Cuisine",
+    price: "$95",
+    description: "An ethereal composition of luminous botanicals and rare aquatic extracts crafted for the avant-garde palate.",
+    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000",
   },
   {
     id: 2,
-    title: "A5 Wagyu Striploin",
-    category: "Haute Cuisine",
-    price: "$128",
-    description: "Miyazaki prefecture A5 striploin, charred shallot purée, roasted bone marrow jus, and chanterelle mushrooms.",
-    image: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=1000",
-  },
-  {
-    id: 3,
-    title: "The Golden Sphere Dome",
-    category: "Avant-Garde Sweets",
-    price: "$36",
-    description: "Valrhona 70% dark chocolate shell, 24k edible gold leaf, passion fruit molten center, Tahitian vanilla bean gelato.",
-    image: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&q=80&w=1000",
-  },
-  {
-    id: 4,
-    title: "Smoked Rosemary Old Fashioned",
-    category: "Alchemical Elixirs",
-    price: "$28",
-    description: "WhistlePig 10yr Rye, Angostura bitters, maple-infused smoked rosemary infusion, charred orange peel.",
+    title: "Vespera Elixir",
+    category: "Alchemical Drinks",
+    price: "$45",
+    description: "Infused with botanical smoke, midnight orchid nectar, and artisanal small-batch botanicals.",
     image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000",
   },
   {
+    id: 3,
+    title: "Aethelgard Reserve",
+    category: "Masterwork",
+    price: "$140",
+    description: "A profound symphony of textures, featuring aged umami reductions and delicate edible gold structures.",
+    image: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=1000",
+  },
+  {
+    id: 4,
+    title: "Solarium Tartine",
+    category: "Amuse-Bouche",
+    price: "$60",
+    description: "Crisp artisanal brioche topped with sun-ripened citrus emulsions and sea salt pearls.",
+    image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&q=80&w=1000",
+  },
+  {
     id: 5,
-    title: "Pan-Seared Chilean Sea Bass",
-    category: "Coastal Reserve",
-    price: "$92",
-    description: "Wild caught sea bass, baby fennel confit, sea urchin foam, saffron-infused imperial dashi broth.",
-    image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=1000",
+    title: "Obsidian Velvet",
+    category: "Avant-Garde Sweets",
+    price: "$50",
+    description: "Dark Valrhona chocolate structure encasing a molten passionfruit heart and vanilla bean whisper.",
+    image: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&q=80&w=1000",
   },
   {
     id: 6,
-    title: "Hudson Valley Foie Gras",
-    category: "Signature Starter",
-    price: "$52",
-    description: "Hudson Valley foie gras, house-baked brioche, mission fig reduction, smoked Maldon salt.",
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000",
+    title: "Abyssal Pearl",
+    category: "Coastal Reserve",
+    price: "$110",
+    description: "Pristine catch served over imperial saffron broth with delicate sea foam and herbs.",
+    image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=1000",
   },
 ];
 
@@ -73,7 +73,7 @@ export const RunningCardsMenu = () => {
         className="flex gap-8 overflow-x-auto px-6 lg:px-16 py-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {runningCardsData.map((card, idx) => (
+        {runningCardsData.map((card) => (
           <div
             key={card.id}
             onClick={() => setSelectedCard(card)}

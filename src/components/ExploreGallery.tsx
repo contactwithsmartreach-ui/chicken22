@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, X } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Eye, X, Plus } from "lucide-react";
 import { BrandScroller, BrandScrollerReverse } from "@/components/ui/brand-scoller";
+import { toast } from "sonner";
 
 const exploreDishes = [
   {
     id: 1,
     name: "Truffled Hokkaido Scallop Carpaccio",
     category: "Amuse-Bouche",
+    price: "$48",
     description: "Thinly sliced diver scallops paired with black winter truffle shavings, Oscietra caviar, and delicate yuzu pearl emulsion.",
     origin: "Hokkaido, Japan & Périgord, France",
     tastingNotes: "Briny, citrus-floral, creamy truffle finish",
@@ -18,6 +20,7 @@ const exploreDishes = [
     id: 2,
     name: "A5 Wagyu Striploin with Bone Marrow Glaze",
     category: "Haute Cuisine",
+    price: "$128",
     description: "Miyazaki prefecture A5 striploin accompanied by charred shallot purée, roasted bone marrow jus, and wild chanterelle mushrooms.",
     origin: "Miyazaki Prefecture, Japan",
     tastingNotes: "Rich umami, buttery melt-in-mouth texture",
@@ -27,6 +30,7 @@ const exploreDishes = [
     id: 3,
     name: "The Golden Sphere 3D Chocolate Dome",
     category: "Avant-Garde Sweets",
+    price: "$36",
     description: "Valrhona 70% dark chocolate shell encrusted with 24k edible gold leaf, passion fruit molten center, and Tahitian vanilla bean gelato.",
     origin: "Tain-l'Hermitage, France",
     tastingNotes: "Bittersweet cocoa, tropical tartness, rich vanilla",
@@ -36,6 +40,7 @@ const exploreDishes = [
     id: 4,
     name: "Smoked Rosemary Old Fashioned Elixir",
     category: "Alchemical Beverages",
+    price: "$28",
     description: "WhistlePig 10yr Rye whiskey infused with maple and smoked rosemary, finished with Angostura bitters and charred orange peel.",
     origin: "Vermont, USA & Provençal Herbs",
     tastingNotes: "Woodsmoke, caramelized maple, warm spice",
@@ -45,6 +50,7 @@ const exploreDishes = [
     id: 5,
     name: "Pan-Seared Chilean Sea Bass in Saffron Dashi",
     category: "Coastal Reserve",
+    price: "$92",
     description: "Wild-caught sea bass served over baby fennel confit, sea urchin foam, and an imperial saffron-infused dashi broth.",
     origin: "Antarctic Waters & Kashmiri Saffron",
     tastingNotes: "Delicate flaked fish, earthy saffron, savory dashi",
@@ -54,6 +60,7 @@ const exploreDishes = [
     id: 6,
     name: "Hudson Valley Foie Gras Torchon",
     category: "Signature Starter",
+    price: "$52",
     description: "Silky torchon served with house-baked brioche, mission fig reduction, and smoked Maldon sea salt crystals.",
     origin: "New York, USA",
     tastingNotes: "Luxuriously smooth, sweet fig contrast",
@@ -66,10 +73,16 @@ const categories = ["All Creations", "Amuse-Bouche", "Haute Cuisine", "Avant-Gar
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState("All Creations");
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const filteredDishes = selectedCategory === "All Creations"
     ? exploreDishes
     : exploreDishes.filter(dish => dish.category === selectedCategory);
+
+  const handleOrder = (name: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success(`${name} added to your tasting selection!`);
+  };
 
   return (
     <section id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
@@ -119,42 +132,58 @@ export const ExploreGallery = () => {
         </div>
       </div>
 
-      {/* Horizontal Sideways Scrolling Track */}
+      {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
       <div
+        ref={scrollRef}
         className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {filteredDishes.map((dish, index) => (
+        {filteredDishes.map((dish) => (
           <div
             key={dish.id}
             onClick={() => setActiveModalDish(dish)}
-            className="group relative flex-shrink-0 w-[340px] sm:w-[420px] rounded-3xl overflow-hidden bg-black/40 backdrop-blur-xl border border-white/20 cursor-pointer snap-center transition-all duration-500 hover:border-[#EFB11D] hover:shadow-2xl hover:shadow-black/50 transform hover:-translate-y-2"
+            className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/25 shadow-2xl transition-all duration-700 hover:border-[#EFB11D] hover:-translate-y-3"
           >
-            <div className="relative h-80 overflow-hidden">
-              <img
-                src={dish.image}
-                alt={dish.name}
-                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
+            {/* Full Screen Background Image */}
+            <img
+              src={dish.image}
+              alt={dish.name}
+              className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+            />
+            
+            {/* Dark Cinematic Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent opacity-95 group-hover:opacity-90 transition-opacity" />
 
-              <div className="absolute bottom-4 left-6 font-mono text-xs text-[#EFB11D] font-bold">
-                0{index + 1} / 0{filteredDishes.length}
-              </div>
+            {/* Top Badges */}
+            <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
+              <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-[#EFB11D] text-xs font-semibold tracking-wider uppercase border border-white/20 shadow-lg">
+                {dish.category}
+              </span>
+              <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white font-serif font-bold text-lg border border-white/20 shadow-lg">
+                {dish.price}
+              </span>
             </div>
 
-            <div className="p-8">
-              <h3 className="font-serif text-2xl font-medium text-white mb-3 group-hover:text-[#EFB11D] transition-colors">
+            {/* Bottom Content Area */}
+            <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-[#EFB11D] transition-colors leading-tight">
                 {dish.name}
               </h3>
-              <p className="text-white/70 text-sm line-clamp-2 leading-relaxed mb-6">
+              <p className="text-white/80 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-6">
                 {dish.description}
               </p>
-              <div className="flex items-center justify-between pt-4 border-t border-white/15 text-xs text-white/60">
-                <span className="tracking-wider uppercase font-medium">{dish.origin.split("&")[0]}</span>
-                <span className="text-[#EFB11D] font-semibold tracking-wide flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Inspect Dish <Eye className="w-3.5 h-3.5 ml-1" />
+
+              <div className="flex items-center justify-between pt-4 border-t border-white/20">
+                <span className="text-xs text-[#EFB11D] font-semibold tracking-wider flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <Eye className="w-4 h-4 mr-1" /> Inspect 3D View
                 </span>
+                <button
+                  onClick={(e) => handleOrder(dish.name, e)}
+                  className="w-10 h-10 rounded-full bg-[#EFB11D] text-neutral-950 flex items-center justify-center hover:bg-[#d69d12] transition-transform active:scale-95 shadow-lg"
+                  aria-label="Add to menu"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
               </div>
             </div>
           </div>
@@ -184,9 +213,14 @@ export const ExploreGallery = () => {
 
               <div className="p-8 sm:p-10 flex flex-col justify-between">
                 <div className="space-y-4">
-                  <span className="px-3 py-1 rounded-full bg-[#EFB11D]/20 text-[#EFB11D] text-xs font-semibold tracking-wider uppercase border border-[#EFB11D]/40">
-                    {activeModalDish.category}
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="px-3 py-1 rounded-full bg-[#EFB11D]/20 text-[#EFB11D] text-xs font-semibold tracking-wider uppercase border border-[#EFB11D]/40">
+                      {activeModalDish.category}
+                    </span>
+                    <span className="font-serif text-2xl font-bold text-[#EFB11D]">
+                      {activeModalDish.price}
+                    </span>
+                  </div>
                   <h3 className="font-serif text-3xl font-bold text-white">
                     {activeModalDish.name}
                   </h3>
@@ -206,13 +240,21 @@ export const ExploreGallery = () => {
                   </div>
                 </div>
 
-                <div className="pt-8 mt-8 border-t border-white/15 flex items-center justify-between">
-                  <span className="text-xs text-white/50 italic">Catalogue Inspection Mode</span>
+                <div className="pt-8 mt-8 border-t border-white/15 flex items-center justify-between gap-4">
+                  <button
+                    onClick={() => {
+                      toast.success(`${activeModalDish.name} added to your tasting menu!`);
+                      setActiveModalDish(null);
+                    }}
+                    className="flex-1 py-3 rounded-xl bg-[#EFB11D] hover:bg-[#d69d12] text-neutral-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg"
+                  >
+                    Add to Tasting Menu
+                  </button>
                   <button
                     onClick={() => setActiveModalDish(null)}
-                    className="px-6 py-2.5 rounded-full bg-[#EFB11D] hover:bg-[#d69d12] text-neutral-950 text-xs font-semibold uppercase tracking-wider transition-colors shadow-md"
+                    className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold uppercase tracking-wider transition-colors border border-white/20"
                   >
-                    Close Inspection
+                    Close
                   </button>
                 </div>
               </div>
