@@ -7,6 +7,7 @@ const repoName = "";
 
 const nextConfig: NextConfig = {
   output: "export",
+  trailingSlash: true,
   // If your site is hosted at username.github.io/repo-name/, set basePath and assetPrefix to '/repo-name'
   // If hosted at username.github.io or custom domain, leave as empty string ""
   basePath: isProd && repoName ? `/${repoName}` : "",
