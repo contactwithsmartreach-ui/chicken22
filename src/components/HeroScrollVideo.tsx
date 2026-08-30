@@ -11,10 +11,10 @@ export const HeroScrollVideo = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 1-second preloader timer while video buffers in the background
+    // Ultra-short 400ms preloader timer for instant popup
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 400);
 
     const video = videoRef.current;
     if (video) {
@@ -54,15 +54,14 @@ export const HeroScrollVideo = () => {
       <link rel="preload" href={localVideoUrl} as="video" type="video/mp4" />
 
       <div className="relative h-screen bg-[#681403] w-full overflow-hidden">
-        {/* Instant 1-Second Preloader Screen */}
+        {/* Short Preloader Screen with Only Title */}
         {isLoading && (
-          <div className="absolute inset-0 z-50 bg-[#681403] flex flex-col items-center justify-center text-white transition-opacity duration-500">
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-[#EFB11D]/20 border border-[#EFB11D]/50 flex items-center justify-center text-[#EFB11D] animate-spin" style={{ animationDuration: "3s" }}>
-                <Sparkles className="w-6 h-6" />
+          <div className="absolute inset-0 z-50 bg-[#681403] flex flex-col items-center justify-center text-white transition-opacity duration-300">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-[#EFB11D]/20 border border-[#EFB11D]/50 flex items-center justify-center text-[#EFB11D] animate-spin" style={{ animationDuration: "2s" }}>
+                <Sparkles className="w-5 h-5" />
               </div>
-              <span className="font-serif text-2xl font-bold tracking-widest text-white">L'ÉLIXIR</span>
-              <span className="text-xs uppercase tracking-[0.3em] text-[#EFB11D]">Loading Salon Experience...</span>
+              <span className="font-serif text-3xl font-bold tracking-widest text-white">L'ÉLIXIR</span>
             </div>
           </div>
         )}
