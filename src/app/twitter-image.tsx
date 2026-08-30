@@ -1,1 +1,1 @@
-export { default, alt, size, contentType, dynamic } from "./opengraph-image";
+// Removed twitter-image.tsx in favor of static image meta tags
