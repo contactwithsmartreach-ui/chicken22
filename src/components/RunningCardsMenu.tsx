@@ -143,9 +143,6 @@ export const RunningCardsMenu = () => {
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent opacity-90 group-hover:opacity-85 transition-opacity" />
 
-              {/* High-Quality Diagonal Glass Specular Reflection Highlight */}
-              <div className="absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 group-hover:animate-[shine_1.2s_ease-in-out] pointer-events-none" />
-
               {/* Card Content */}
               <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
                 <span className="text-[#EFB11D] text-xs font-semibold tracking-wider uppercase mb-1">
