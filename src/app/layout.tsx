@@ -12,13 +12,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://chicken22.github.io/chicken22";
-const ogImageUrl = "https://chicken22.github.io/chicken22/opengraph-image";
-const fallbackOgImageUrl = "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=1200&h=630";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: "L'ÉLIXIR — 3D Gastronomy Salon | Michelin Three-Star Experience",
+  metadataBase: new URL("https://chicken22.github.io/chicken22"),
+  title: {
+    default: "L'ÉLIXIR — 3D Gastronomy Salon | Michelin Three-Star Experience",
+    template: "%s | L'ÉLIXIR",
+  },
   description:
     "An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections, molecular alchemy, and rare European vintage pairings.",
   keywords: [
@@ -30,45 +29,53 @@ export const metadata: Metadata = {
     "Interactive Projection Menu",
     "Lucien Vance",
   ],
-  authors: [{ name: "L'Élixir Gastronomy Salon" }],
+  authors: [{ name: "L'Élixir Gastronomy Salon", url: "https://chicken22.github.io/chicken22" }],
+  creator: "L'Élixir",
+  publisher: "L'Élixir",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "https://chicken22.github.io/chicken22",
+  },
   openGraph: {
-    title: "L'ÉLIXIR — 3D Gastronomy Salon",
+    title: "L'ÉLIXIR — 3D Gastronomy Salon | Michelin Three-Star Experience",
     description:
-      "Michelin three-star fine dining experience with immersive 3D culinary previews and multi-sensory projection art.",
-    url: siteUrl,
-    siteName: "L'Élixir 3D Gastronomy Salon",
-    locale: "en_US",
-    type: "website",
+      "An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections and alchemical gastronomy.",
+    url: "https://chicken22.github.io/chicken22",
+    siteName: "L'ÉLIXIR",
     images: [
       {
-        url: ogImageUrl,
+        url: "https://chicken22.github.io/chicken22/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "L'ÉLIXIR — 3D Gastronomy Salon Michelin Three-Star Experience",
+        alt: "L'ÉLIXIR — 3D Gastronomy Salon",
         type: "image/png",
       },
-      {
-        url: fallbackOgImageUrl,
-        width: 1200,
-        height: 630,
-        alt: "L'ÉLIXIR Haute Cuisine Preview",
-        type: "image/jpeg",
-      },
     ],
+    locale: "en_US",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "L'ÉLIXIR — 3D Gastronomy Salon",
     description:
-      "Michelin three-star fine dining experience with immersive 3D culinary previews.",
-    images: [ogImageUrl, fallbackOgImageUrl],
+      "An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections.",
+    images: ["https://chicken22.github.io/chicken22/opengraph-image"],
   },
   icons: {
     icon: "/favicon.ico",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {
+  themeColor: "#520f02",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -81,20 +88,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* Explicit OpenGraph & Telegram/WhatsApp tags */}
-        <meta property="og:image" content={ogImageUrl} />
-        <meta property="og:image:secure_url" content={ogImageUrl} />
+        {/* Direct Open Graph meta tags for WhatsApp, Telegram, iMessage & Facebook crawlers */}
+        <meta property="og:title" content="L'ÉLIXIR — 3D Gastronomy Salon | Michelin Three-Star Experience" />
+        <meta property="og:description" content="An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections and alchemical gastronomy." />
+        <meta property="og:image" content="https://chicken22.github.io/chicken22/opengraph-image" />
+        <meta property="og:image:secure_url" content="https://chicken22.github.io/chicken22/opengraph-image" />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="L'ÉLIXIR — 3D Gastronomy Salon" />
-        <meta name="twitter:image" content={ogImageUrl} />
+        <meta property="og:url" content="https://chicken22.github.io/chicken22" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="L'ÉLIXIR" />
+
+        {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="L'ÉLIXIR — 3D Gastronomy Salon" />
+        <meta name="twitter:description" content="An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections." />
+        <meta name="twitter:image" content="https://chicken22.github.io/chicken22/opengraph-image" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#681403] text-white selection:bg-[#EFB11D] selection:text-neutral-950`}
       >
         {children}
       </body>

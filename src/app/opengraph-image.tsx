@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 export const alt = "L'ÉLIXIR — 3D Gastronomy Salon | Michelin Three-Star Experience";
 export const size = {
   width: 1200,
@@ -8,7 +9,7 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export default async function OpenGraphImage() {
+export default function OgImage() {
   return new ImageResponse(
     (
       <div
@@ -16,247 +17,209 @@ export default async function OpenGraphImage() {
           height: "100%",
           width: "100%",
           display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "space-between",
-          background: "linear-gradient(135deg, #520f02 0%, #681403 35%, #8b1e06 70%, #3d0a00 100%)",
+          backgroundColor: "#520f02",
           padding: "60px 70px",
+          fontFamily: "sans-serif",
           color: "white",
-          fontFamily: "Georgia, serif",
           position: "relative",
+          overflow: "hidden",
         }}
       >
-        {/* Ambient Glows */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-100px",
-            left: "-100px",
-            width: "500px",
-            height: "500px",
-            borderRadius: "50%",
-            background: "rgba(228, 61, 18, 0.35)",
-            filter: "blur(90px)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-100px",
-            right: "100px",
-            width: "500px",
-            height: "500px",
-            borderRadius: "50%",
-            background: "rgba(239, 177, 29, 0.3)",
-            filter: "blur(90px)",
-          }}
-        />
-
-        {/* Left Content Column */}
+        {/* Background Ambient Radial Glows */}
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
+            position: "absolute",
+            top: "-120px",
+            left: "-120px",
+            width: "650px",
+            height: "650px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(228, 61, 18, 0.45) 0%, rgba(82, 15, 2, 0) 70%)",
+          }}
+        />
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
+            bottom: "-120px",
+            right: "-120px",
+            width: "650px",
+            height: "650px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(239, 177, 29, 0.4) 0%, rgba(82, 15, 2, 0) 70%)",
+          }}
+        />
+
+        {/* Top Header Row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
             justifyContent: "space-between",
-            height: "100%",
-            maxWidth: "640px",
+            width: "100%",
             zIndex: 10,
           }}
         >
-          {/* Top Badge */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "8px",
-              padding: "8px 20px",
-              borderRadius: "50px",
-              backgroundColor: "rgba(239, 177, 29, 0.15)",
-              border: "1px solid rgba(239, 177, 29, 0.4)",
-              color: "#EFB11D",
-              fontSize: "13px",
-              fontWeight: 700,
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              width: "fit-content",
-              fontFamily: "sans-serif",
+              gap: "12px",
+              backgroundColor: "rgba(104, 20, 3, 0.8)",
+              border: "1.5px solid rgba(239, 177, 29, 0.5)",
+              padding: "8px 22px",
+              borderRadius: "999px",
             }}
           >
-            ★ Michelin Three-Star Experience
-          </div>
-
-          {/* Title & Slogan */}
-          <div style={{ display: "flex", flexDirection: "column", marginTop: "20px" }}>
             <div
               style={{
-                fontSize: "72px",
+                display: "flex",
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: "#EFB11D",
+              }}
+            />
+            <span
+              style={{
+                fontSize: "14px",
                 fontWeight: 700,
                 color: "#EFB11D",
-                letterSpacing: "4px",
-                lineHeight: 1.1,
-                marginBottom: "12px",
+                letterSpacing: "1.5px",
+              }}
+            >
+              MICHELIN THREE-STAR SALON • PARIS 75008
+            </span>
+          </div>
+
+          <span
+            style={{
+              fontSize: "20px",
+              fontWeight: 700,
+              color: "#EFB11D",
+              letterSpacing: "2px",
+            }}
+          >
+            L'ÉLIXIR
+          </span>
+        </div>
+
+        {/* Center Main Content */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "18px",
+            zIndex: 10,
+            maxWidth: "960px",
+          }}
+        >
+          {/* Logo & Brand Title */}
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "68px",
+                height: "68px",
+                borderRadius: "20px",
+                backgroundColor: "#681403",
+                border: "2px solid rgba(239, 177, 29, 0.6)",
+                fontSize: "34px",
+              }}
+            >
+              🍷
+            </div>
+            <span
+              style={{
+                fontSize: "64px",
+                fontWeight: 800,
+                color: "#ffffff",
+                letterSpacing: "-1.5px",
               }}
             >
               L'ÉLIXIR
-            </div>
-            <div
-              style={{
-                fontSize: "36px",
-                fontWeight: 400,
-                color: "#FFFFFF",
-                lineHeight: 1.25,
-              }}
-            >
-              Where Haute Cuisine Meets{" "}
-              <span style={{ color: "#EFB11D", fontStyle: "italic" }}>
-                3D Digital Artistry
-              </span>
-            </div>
-            <div
-              style={{
-                fontSize: "16px",
-                color: "rgba(235, 233, 225, 0.8)",
-                marginTop: "16px",
-                lineHeight: 1.5,
-                fontFamily: "sans-serif",
-                fontWeight: 300,
-              }}
-            >
-              An avant-garde multi-sensory fine dining odyssey orchestrated with synchronized spatial projections and alchemical gastronomy.
-            </div>
+            </span>
           </div>
 
-          {/* Bottom Stats */}
           <div
             style={{
               display: "flex",
-              gap: "36px",
-              paddingTop: "24px",
-              borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-              fontFamily: "sans-serif",
+              fontSize: "44px",
+              fontWeight: 300,
+              color: "#FFF4D0",
+              letterSpacing: "-1px",
+              lineHeight: 1.15,
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "24px", fontWeight: 700, color: "#EFB11D" }}>
-                3 Stars
-              </span>
-              <span style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.6)", letterSpacing: "1px" }}>
-                MICHELIN GUIDE
-              </span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "24px", fontWeight: 700, color: "#EFB11D" }}>
-                12 Courses
-              </span>
-              <span style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.6)", letterSpacing: "1px" }}>
-                SENSORY JOURNEY
-              </span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "24px", fontWeight: 700, color: "#EFB11D" }}>
-                Paris 75008
-              </span>
-              <span style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.6)", letterSpacing: "1px" }}>
-                PRIVATE SALON
-              </span>
-            </div>
+            <span>Where Haute Cuisine Meets&nbsp;</span>
+            <span style={{ fontWeight: 800, color: "#EFB11D", fontStyle: "italic" }}>
+              3D Digital Artistry
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              fontSize: "20px",
+              color: "#EBE9E1",
+              opacity: 0.9,
+              lineHeight: 1.45,
+            }}
+          >
+            An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections and alchemical gastronomy.
           </div>
         </div>
 
-        {/* Right Glass Showcase Card */}
-        <div
-          style={{
-            width: "380px",
-            height: "440px",
-            borderRadius: "28px",
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
-            border: "1.5px solid rgba(239, 177, 29, 0.4)",
-            padding: "24px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.7)",
-            zIndex: 10,
-          }}
-        >
-          {/* Card inner image banner */}
-          <div
-            style={{
-              width: "100%",
-              height: "220px",
-              borderRadius: "18px",
-              background: "linear-gradient(135deg, #1e0703 0%, #E43D12 50%, #EFB11D 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "48px",
-                filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
-              }}
-            >
-              🍷 ✨ 🍽️
-            </div>
-          </div>
-
-          {/* Card info */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <div
-              style={{
-                padding: "4px 12px",
-                borderRadius: "12px",
-                backgroundColor: "rgba(239, 177, 29, 0.2)",
-                color: "#EFB11D",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "1px",
-                width: "fit-content",
-                fontFamily: "sans-serif",
-              }}
-            >
-              HAUTE CUISINE
-            </div>
-            <div style={{ fontSize: "22px", fontWeight: 700, color: "#FFFFFF" }}>
-              A5 Wagyu Striploin
-            </div>
-            <div style={{ fontSize: "13px", color: "rgba(235, 233, 225, 0.75)", fontFamily: "sans-serif" }}>
-              Bone Marrow Jus & 3D Projection Symphony
-            </div>
-          </div>
-
+        {/* Bottom Feature Badges */}
+        <div style={{ display: "flex", gap: "16px", zIndex: 10 }}>
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderTop: "1px solid rgba(255, 255, 255, 0.15)",
-              paddingTop: "12px",
+              backgroundColor: "#681403",
+              border: "1px solid rgba(239, 177, 29, 0.4)",
+              padding: "10px 24px",
+              borderRadius: "999px",
+              fontSize: "15px",
+              fontWeight: 600,
+              color: "#EFB11D",
             }}
           >
-            <span style={{ fontSize: "12px", color: "#EFB11D", fontFamily: "sans-serif", letterSpacing: "1px" }}>
-              CHEF LUCIEN VANCE
-            </span>
-            <span style={{ fontSize: "24px", fontWeight: 700, color: "#EFB11D" }}>
-              $128
-            </span>
+            ★ 3 Michelin Stars
+          </div>
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#681403",
+              border: "1px solid rgba(239, 177, 29, 0.4)",
+              padding: "10px 24px",
+              borderRadius: "999px",
+              fontSize: "15px",
+              fontWeight: 600,
+              color: "#FFF4D0",
+            }}
+          >
+            ✨ 12-Course Sensory Journey
+          </div>
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#681403",
+              border: "1px solid rgba(239, 177, 29, 0.4)",
+              padding: "10px 24px",
+              borderRadius: "999px",
+              fontSize: "15px",
+              fontWeight: 600,
+              color: "#FFF4D0",
+            }}
+          >
+            🍷 1,200+ Vintage Cellar
           </div>
         </div>
-
-        {/* Bottom Gold Accent Bar */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "8px",
-            background: "linear-gradient(90deg, #EFB11D, #FFA2B6, #EFB11D)",
-          }}
-        />
       </div>
     ),
     {
