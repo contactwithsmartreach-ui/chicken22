@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+
 @layer base {
   :root {
     --background: 41 33% 91%; /* EBE9E1 */

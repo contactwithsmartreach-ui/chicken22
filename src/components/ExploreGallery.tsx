@@ -141,10 +141,10 @@ export const ExploreGallery = () => {
         </div>
       </div>
 
-      {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
+      {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards & Glass Reflection */}
       <div className={`transition-all duration-500 delay-200 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
         <div
-          className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
+          className="flex gap-10 overflow-x-auto px-6 lg:px-16 pb-16 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {filteredDishes.map((dish) => (
@@ -162,6 +162,9 @@ export const ExploreGallery = () => {
               
               {/* Dark Cinematic Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent opacity-95 group-hover:opacity-90 transition-opacity" />
+
+              {/* High-Quality Diagonal Glass Specular Reflection Highlight */}
+              <div className="absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 group-hover:animate-[shine_1.2s_ease-in-out] pointer-events-none" />
 
               {/* Bottom Content Area */}
               <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end">
