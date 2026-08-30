@@ -1,1 +1,0 @@
-// Removed twitter-image.tsx in favor of static image meta tags

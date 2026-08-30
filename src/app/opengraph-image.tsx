@@ -1,1 +1,0 @@
-// Removed dynamic opengraph-image.tsx in favor of static public/og-image.png for GitHub Pages
