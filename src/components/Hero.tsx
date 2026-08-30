@@ -7,7 +7,6 @@ import { getAssetPath } from "@/lib/config";
 export default function Hero() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [videoError, setVideoError] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
   const togglePlay = () => {
@@ -28,59 +27,55 @@ export default function Hero() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-950 text-white pt-24 pb-16">
-      {/* Background Layer: Stunning CSS Luxury Ambient Animation as bulletproof fallback */}
+      {/* Bulletproof CSS 3D Orbital & Glowing Particle Animation */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
-        <div className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-amber-600/30 via-amber-400/25 to-yellow-300/40 blur-[120px] animate-pulse" />
-        <div className="absolute w-[500px] h-[500px] rounded-full border border-amber-500/30 animate-[spin_25s_linear_infinite]" style={{ transformStyle: "preserve-3d" }} />
-        <div className="absolute w-[380px] h-[380px] rounded-full border border-dashed border-amber-400/25 animate-[spin_18s_linear_infinite_reverse]" />
-        
-        {/* Floating particles */}
-        <div className="absolute top-1/4 left-1/3 w-3.5 h-3.5 rounded-full bg-amber-400 shadow-[0_0_20px_#fbbf24] animate-bounce" style={{ animationDuration: "3s" }} />
-        <div className="absolute top-1/3 right-1/4 w-2.5 h-2.5 rounded-full bg-yellow-300 shadow-[0_0_15px_#fde047] animate-bounce" style={{ animationDuration: "4s" }} />
+        <div className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-amber-600/25 via-amber-400/20 to-yellow-300/35 blur-[140px] animate-pulse" style={{ animationDuration: "6s" }} />
+        <div className="absolute w-[500px] h-[500px] rounded-full border border-amber-500/30 animate-[spin_30s_linear_infinite]" />
+        <div className="absolute w-[380px] h-[380px] rounded-full border border-dashed border-amber-400/25 animate-[spin_20s_linear_infinite_reverse]" />
+        <div className="absolute w-[240px] h-[240px] rounded-full border border-amber-300/20 animate-[spin_15s_linear_infinite]" />
+
+        {/* Floating glowing orbs */}
+        <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-amber-400 shadow-[0_0_25px_#fbbf24] animate-bounce" style={{ animationDuration: "3s" }} />
+        <div className="absolute top-1/3 right-1/4 w-3 h-3 rounded-full bg-yellow-300 shadow-[0_0_20px_#fde047] animate-bounce" style={{ animationDuration: "4.5s" }} />
+        <div className="absolute bottom-1/3 left-1/3 w-3.5 h-3.5 rounded-full bg-amber-500 shadow-[0_0_20px_#f59e0b] animate-bounce" style={{ animationDuration: "3.8s" }} />
       </div>
 
-      {/* Video Background (if supported & loaded) */}
-      {!videoError && (
-        <div className="absolute inset-0 z-0 overflow-hidden opacity-40">
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            onError={() => setVideoError(true)}
-            className="absolute inset-0 w-full h-full object-cover scale-105 filter brightness-75 contrast-125"
-          >
-            <source src={getAssetPath("videos/restaurant_3d.mp4")} type="video/mp4" />
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-restaurant-interior-with-warm-lighting-41555-large.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-neutral-950/80" />
-        </div>
-      )}
+      {/* Background Video with fallback */}
+      <div className="absolute inset-0 z-0 overflow-hidden opacity-35">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover scale-105 filter brightness-75 contrast-125"
+        >
+          <source src={getAssetPath("videos/restaurant_3d.mp4")} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-neutral-950/80" />
+      </div>
 
       {/* Floating Video Controls Pill */}
-      {!videoError && (
-        <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-neutral-900/80 border border-neutral-700/60 px-4 py-2 rounded-full backdrop-blur-md shadow-2xl text-xs text-neutral-300">
-          <span className="flex items-center gap-1.5 text-amber-400 font-medium mr-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            Live Atmosphere
-          </span>
-          <button
-            onClick={togglePlay}
-            className="p-1.5 rounded-full hover:bg-neutral-800 text-amber-300 transition-colors"
-            title={isPlaying ? "Pause" : "Play"}
-          >
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-          </button>
-          <button
-            onClick={toggleMute}
-            className="p-1.5 rounded-full hover:bg-neutral-800 text-amber-300 transition-colors"
-            title={isMuted ? "Unmute" : "Mute"}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-        </div>
-      )}
+      <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-neutral-900/80 border border-neutral-700/60 px-4 py-2 rounded-full backdrop-blur-md shadow-2xl text-xs text-neutral-300">
+        <span className="flex items-center gap-1.5 text-amber-400 font-medium mr-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+          Live Atmosphere
+        </span>
+        <button
+          onClick={togglePlay}
+          className="p-1.5 rounded-full hover:bg-neutral-800 text-amber-300 transition-colors"
+          title={isPlaying ? "Pause" : "Play"}
+        >
+          {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+        </button>
+        <button
+          onClick={toggleMute}
+          className="p-1.5 rounded-full hover:bg-neutral-800 text-amber-300 transition-colors"
+          title={isMuted ? "Unmute" : "Mute"}
+        >
+          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+        </button>
+      </div>
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         {/* Top Badge */}
