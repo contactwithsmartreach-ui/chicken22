@@ -9,11 +9,14 @@ export const HeroScrollVideo = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [fadeComplete, setFadeComplete] = useState(false);
 
   useEffect(() => {
-    // Ultra-fast 150ms preloader timer for instant popup with smooth fade
+    // Ultra-fast 150ms preloader timer for instant popup with smooth gradient fade
     const timer = setTimeout(() => {
       setIsLoading(false);
+      const fadeTimer = setTimeout(() => setFadeComplete(true), 500);
+      return () => clearTimeout(fadeTimer);
     }, 150);
 
     const video = videoRef.current;
@@ -54,10 +57,19 @@ export const HeroScrollVideo = () => {
       <link rel="preload" href={localVideoUrl} as="video" type="video/mp4" />
 
       <div className="relative h-screen bg-[#681403] w-full overflow-hidden">
-        {/* Ultra-short preloader screen with only large title */}
-        {isLoading && (
-          <div className="absolute inset-0 z-50 bg-[#681403] flex items-center justify-center text-white transition-opacity duration-200 opacity-100">
-            <span className="font-serif text-5xl sm:text-7xl font-bold tracking-widest text-white">L'ÉLIXIR</span>
+        {/* Ultra-short preloader screen with smooth gradient fade transition */}
+        {!fadeComplete && (
+          <div
+            className={`absolute inset-0 z-50 bg-gradient-to-b from-[#681403] via-[#8b1e06] to-[#520f02] flex items-center justify-center text-white transition-all duration-700 ease-out ${
+              isLoading ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+            }`}
+          >
+            <div className="relative flex flex-col items-center">
+              <div className="absolute w-72 h-72 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
+              <span className="font-serif text-5xl sm:text-7xl font-bold tracking-[0.2em] bg-gradient-to-r from-white via-amber-100 to-[#EFB11D] bg-clip-text text-transparent drop-shadow-2xl animate-pulse">
+                L'ÉLIXIR
+              </span>
+            </div>
           </div>
         )}
 
