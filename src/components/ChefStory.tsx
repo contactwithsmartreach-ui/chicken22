@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Award, UtensilsCrossed, Sparkles } from "lucide-react";
+import { Award, Sparkles } from "lucide-react";
 
-export const ChefStory = () => {
+export function ChefStory() {
   return (
     <section id="story" className="py-28 px-6 lg:px-16 bg-neutral-900 text-white relative border-t border-neutral-800">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -58,4 +58,6 @@ export const ChefStory = () => {
       </div>
     </section>
   );
-};
+}
+
+export default ChefStory;
