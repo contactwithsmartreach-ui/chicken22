@@ -1,16 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import { HeroScrollVideo } from "@/components/HeroScrollVideo";
 import { Navigation } from "@/components/Navigation";
 import { ExploreGallery } from "@/components/ExploreGallery";
 import { RunningCardsMenu } from "@/components/RunningCardsMenu";
 import { SalonSection } from "@/components/SalonSection";
 import { MadeWithDyad } from "@/components/made-with-dyad";
+import { IntroSplash } from "@/components/IntroSplash";
 
 export default function Home() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
-    <div className="min-h-screen bg-[#681403] text-white">
+    <div className="min-h-screen bg-[#681403] text-white relative">
+      {showSplash && <IntroSplash onComplete={() => setShowSplash(false)} />}
+
       <Navigation />
 
-      {/* 3D Scrollable Video Hero Section (untouched dark theme) */}
+      {/* 3D Scrollable Video Hero Section */}
       <div id="explore" className="relative">
         <HeroScrollVideo />
         {/* Seamless smooth gradient fade into the next section */}
