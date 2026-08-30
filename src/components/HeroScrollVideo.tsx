@@ -1,32 +1,32 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { ChevronDown, Play, Pause, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { getAssetPath } from "@/lib/config";
 
 export const HeroScrollVideo = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    // 1-second preloader timer while video buffers in the background
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
 
-    video.playbackRate = 1.0;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch(() => {
-          video.muted = true;
-          setIsMuted(true);
-          video.play().catch(() => {});
-        });
+    const video = videoRef.current;
+    if (video) {
+      video.playbackRate = 1.0;
+      video.play().catch(() => {
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {});
+      });
     }
+
+    return () => clearTimeout(timer);
   }, []);
 
   const togglePlay = () => {
@@ -51,31 +51,41 @@ export const HeroScrollVideo = () => {
 
   return (
     <>
-      {/* Hidden preload link for instant browser cache & streaming initialization */}
       <link rel="preload" href={localVideoUrl} as="video" type="video/mp4" />
 
       <div className="relative h-screen bg-[#681403] w-full overflow-hidden">
+        {/* Instant 1-Second Preloader Screen */}
+        {isLoading && (
+          <div className="absolute inset-0 z-50 bg-[#681403] flex flex-col items-center justify-center text-white transition-opacity duration-500">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-[#EFB11D]/20 border border-[#EFB11D]/50 flex items-center justify-center text-[#EFB11D] animate-spin" style={{ animationDuration: "3s" }}>
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <span className="font-serif text-2xl font-bold tracking-widest text-white">L'ÉLIXIR</span>
+              <span className="text-xs uppercase tracking-[0.3em] text-[#EFB11D]">Loading Salon Experience...</span>
+            </div>
+          </div>
+        )}
+
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#681403] select-none">
           
-          {/* Dynamic 3D Orbital Glow Animation as resilient backdrop */}
+          {/* Dynamic 3D Orbital Glow Animation */}
           <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
             <div className="absolute w-[600px] sm:w-[800px] h-[600px] sm:h-[800px] rounded-full bg-gradient-to-tr from-[#EFB11D]/20 via-[#E43D12]/30 to-[#FFA2B6]/20 blur-[130px] animate-pulse" />
             <div className="absolute w-[450px] h-[450px] rounded-full border border-[#EFB11D]/30 animate-[spin_35s_linear_infinite]" />
             <div className="absolute w-[320px] h-[320px] rounded-full border border-dashed border-white/20 animate-[spin_20s_linear_infinite_reverse]" />
           </div>
 
-          {/* Optimized Video Player with eager preload and autoPlay */}
+          {/* Video Player */}
           <video
             ref={videoRef}
-            className={`absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu transition-opacity duration-300 ${videoLoaded ? "opacity-100" : "opacity-100"}`}
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu"
             autoPlay
             muted={isMuted}
             loop
             playsInline
             preload="auto"
-            onLoadedData={() => setVideoLoaded(true)}
             onError={(e) => {
-              console.warn("Video failed to load primary source, falling back to CDN source.", e);
               const target = e.currentTarget;
               if (target.src !== fallbackCdnVideoUrl) {
                 target.src = fallbackCdnVideoUrl;
@@ -89,7 +99,7 @@ export const HeroScrollVideo = () => {
             <source src={fallbackCdnVideoUrl} type="video/mp4" />
           </video>
 
-          {/* Floating Video Audio & Play Controls */}
+          {/* Floating Video Controls */}
           <div className="absolute bottom-8 right-8 z-20 hidden sm:flex items-center gap-2 bg-black/60 border border-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-md text-xs text-white">
             <button
               onClick={togglePlay}
