@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, Play, Pause, Volume2, VolumeX, Sparkles, Compass } from "lucide-react";
+import { ChevronDown, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { getAssetPath } from "@/lib/config";
 
 export const HeroScrollVideo = () => {
@@ -88,31 +88,6 @@ export const HeroScrollVideo = () => {
 
         {/* Ambient Darkened Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#681403] via-black/30 to-[#681403]/60 pointer-events-none" />
-
-        {/* Floating Center Title & Branding Overlay */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EFB11D]/20 border border-[#EFB11D]/40 text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-6 backdrop-blur-md shadow-lg">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Grand Opening Experience</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold text-white tracking-tight mb-6 leading-tight">
-            L'ÉLIXIR <br />
-            <span className="text-[#EFB11D] italic font-normal">3D Gastronomy</span>
-          </h1>
-
-          <p className="text-sm sm:text-lg text-white/90 max-w-xl mb-8 font-light leading-relaxed">
-            Where haute French culinary craft meets immersive 3D digital projection and sensory gastronomy.
-          </p>
-
-          <a
-            href="#gallery"
-            className="px-8 py-3.5 rounded-full bg-[#EFB11D] hover:bg-[#d69d12] text-neutral-950 font-bold text-sm tracking-wider uppercase transition-all shadow-xl shadow-[#EFB11D]/30 flex items-center gap-2"
-          >
-            <Compass className="w-4 h-4" />
-            <span>Explore The Menu</span>
-          </a>
-        </div>
 
         {/* Floating Video Audio & Play Controls */}
         <div className="absolute bottom-8 right-8 z-20 hidden sm:flex items-center gap-2 bg-black/60 border border-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-md text-xs text-white">
