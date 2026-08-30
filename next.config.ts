@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 // Determine if we are building for GitHub Pages production
 const isProd = process.env.NODE_ENV === "production";
-// Replace 'YOUR_REPO_NAME' with your actual GitHub repository name if it's not a user/organization page (e.g. username.github.io)
-const repoName = ""; 
+// Repository name for GitHub Pages
+const repoName = "chicken22"; 
 
 const nextConfig: NextConfig = {
   output: "export",
