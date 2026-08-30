@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { X } from "lucide-react";
+import { motion } from "framer-motion";
 import { BrandScroller, BrandScrollerReverse } from "@/components/ui/brand-scoller";
 import { toast } from "sonner";
 
@@ -73,28 +74,13 @@ const categories = ["All Creations", "Amuse-Bouche", "Haute Cuisine", "Avant-Gar
 export const ExploreGallery = () => {
   const [activeModalDish, setActiveModalDish] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState("All Creations");
-  const [hasScrolledIn, setHasScrolledIn] = useState(true);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      if (rect.top < window.innerHeight) {
-        setHasScrolledIn(true);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const filteredDishes = selectedCategory === "All Creations"
     ? exploreDishes
     : exploreDishes.filter(dish => dish.category === selectedCategory);
 
   return (
-    <section ref={ref} id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
+    <section id="gallery" className="py-32 bg-gradient-to-b from-[#8b1e06] via-[#E43D12] to-[#681403] text-white relative overflow-hidden shadow-[inset_0_50px_100px_rgba(0,0,0,0.6),inset_0_-50px_100px_rgba(0,0,0,0.6)]">
       {/* Top seamless blend gradient */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#8b1e06] to-transparent pointer-events-none z-20" />
 
@@ -102,7 +88,13 @@ export const ExploreGallery = () => {
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#EFB11D]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFA2B6]/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10 transition-all duration-500 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
+      <motion.div
+        initial={{ opacity: 0, y: -40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-7xl mx-auto px-6 lg:px-16 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10"
+      >
         <div>
           <h2 className="text-5xl sm:text-7xl font-serif font-light tracking-tight text-white leading-none flex flex-wrap items-center gap-4">
             <span>Explore</span>
@@ -114,16 +106,28 @@ export const ExploreGallery = () => {
         <p className="text-white/80 max-w-sm text-sm leading-relaxed">
           Select a category below to filter masterworks and inspect their culinary profile.
         </p>
-      </div>
+      </motion.div>
 
       {/* Brand Scroller Ticker Integration */}
-      <div className={`mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner transition-all duration-500 delay-100 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="mb-16 space-y-4 py-4 border-y border-white/20 bg-black/20 text-white relative z-10 shadow-inner"
+      >
         <BrandScroller />
         <BrandScrollerReverse />
-      </div>
+      </motion.div>
 
       {/* Category Filter Pills with Glassmorphism */}
-      <div className={`max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10 transition-all duration-500 delay-150 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-7xl mx-auto px-6 lg:px-16 mb-16 relative z-10"
+      >
         <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {categories.map((cat) => (
             <button
@@ -139,17 +143,26 @@ export const ExploreGallery = () => {
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Horizontal Sideways Scrolling Track with 3D Full Image Cards */}
-      <div className={`transition-all duration-500 delay-200 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div
           className="flex gap-8 overflow-x-auto px-6 lg:px-16 pb-12 pt-4 no-scrollbar scroll-smooth snap-x snap-mandatory relative z-10"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {filteredDishes.map((dish) => (
-            <div
+          {filteredDishes.map((dish, idx) => (
+            <motion.div
               key={dish.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => setActiveModalDish(dish)}
               className="group relative flex-shrink-0 w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden cursor-pointer snap-center border border-white/25 shadow-2xl transition-all duration-700 hover:border-[#EFB11D] hover:-translate-y-3"
             >
@@ -172,15 +185,20 @@ export const ExploreGallery = () => {
                   {dish.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Dish Inspection Modal with Glassmorphism */}
       {activeModalDish && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300">
-          <div className="relative w-full max-w-3xl bg-neutral-950/90 backdrop-blur-2xl border border-white/25 rounded-3xl overflow-hidden shadow-2xl text-white">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-3xl bg-neutral-950/90 backdrop-blur-2xl border border-white/25 rounded-3xl overflow-hidden shadow-2xl text-white"
+          >
             <button
               onClick={() => setActiveModalDish(null)}
               className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/20 text-white hover:text-[#EFB11D] flex items-center justify-center transition-colors shadow-sm"
@@ -246,7 +264,7 @@ export const ExploreGallery = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
