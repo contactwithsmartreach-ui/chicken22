@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, Play, Pause, Volume2, VolumeX, Sparkles } from "lucide-react";
+import { ChevronDown, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { getAssetPath } from "@/lib/config";
 
 export const HeroScrollVideo = () => {
@@ -54,15 +54,10 @@ export const HeroScrollVideo = () => {
       <link rel="preload" href={localVideoUrl} as="video" type="video/mp4" />
 
       <div className="relative h-screen bg-[#681403] w-full overflow-hidden">
-        {/* Ultra-short preloader screen with smooth transition */}
+        {/* Ultra-short preloader screen with only large title */}
         {isLoading && (
-          <div className="absolute inset-0 z-50 bg-[#681403] flex flex-col items-center justify-center text-white transition-opacity duration-200 opacity-100">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#EFB11D]/20 border border-[#EFB11D]/50 flex items-center justify-center text-[#EFB11D] animate-spin" style={{ animationDuration: "1s" }}>
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <span className="font-serif text-2xl font-bold tracking-widest text-white">L'ÉLIXIR</span>
-            </div>
+          <div className="absolute inset-0 z-50 bg-[#681403] flex items-center justify-center text-white transition-opacity duration-200 opacity-100">
+            <span className="font-serif text-5xl sm:text-7xl font-bold tracking-widest text-white">L'ÉLIXIR</span>
           </div>
         )}
 
