@@ -57,11 +57,6 @@ export const HeroScrollVideo = () => {
       <div className="relative h-screen bg-[#681403] w-full overflow-hidden">
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#681403] select-none">
           
-          {/* Instant Background Poster / Placeholder Layer to eliminate blank screen before video loads */}
-          <div className={`absolute inset-0 z-0 bg-gradient-to-tr from-[#681403] via-[#8b1e06] to-[#681403] transition-opacity duration-500 ${videoLoaded ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,177,29,0.15)_0%,transparent_70%)]" />
-          </div>
-
           {/* Dynamic 3D Orbital Glow Animation as resilient backdrop */}
           <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
             <div className="absolute w-[600px] sm:w-[800px] h-[600px] sm:h-[800px] rounded-full bg-gradient-to-tr from-[#EFB11D]/20 via-[#E43D12]/30 to-[#FFA2B6]/20 blur-[130px] animate-pulse" />
@@ -72,7 +67,7 @@ export const HeroScrollVideo = () => {
           {/* Optimized Video Player with eager preload and autoPlay */}
           <video
             ref={videoRef}
-            className={`absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu transition-opacity duration-300 ${videoLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu transition-opacity duration-300 ${videoLoaded ? "opacity-100" : "opacity-100"}`}
             autoPlay
             muted={isMuted}
             loop
