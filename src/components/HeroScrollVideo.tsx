@@ -8,6 +8,7 @@ export const HeroScrollVideo = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -59,15 +60,16 @@ export const HeroScrollVideo = () => {
           <div className="absolute w-[320px] h-[320px] rounded-full border border-dashed border-white/20 animate-[spin_20s_linear_infinite_reverse]" />
         </div>
 
-        {/* Video Player rendering immediately with zero opacity delay */}
+        {/* Video Player without poster attribute for instant seamless display */}
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu"
+          className={`absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu transition-opacity duration-1000 ${videoLoaded ? "opacity-100" : "opacity-90"}`}
           autoPlay
           muted={isMuted}
           loop
           playsInline
           preload="auto"
+          onLoadedData={() => setVideoLoaded(true)}
           onError={(e) => {
             console.warn("Video failed to load primary source, falling back to CDN source.", e);
             const target = e.currentTarget;
