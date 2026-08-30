@@ -15,12 +15,12 @@ export default function App() {
   const [reservationOpen, setReservationOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-neutral-950 font-sans selection:bg-amber-500 selection:text-neutral-950">
+    <div className="min-h-screen bg-neutral-950 text-white font-sans antialiased selection:bg-amber-500 selection:text-neutral-950">
       <Toaster position="top-right" richColors theme="dark" />
       
       <Navbar onOpenReservation={() => setReservationOpen(true)} />
       
-      <main>
+      <main className="w-full overflow-x-hidden">
         <Hero />
         <InteractiveMenu3D />
         <Experience3D />
