@@ -12,8 +12,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://chicken22.github.io/chicken22";
+const ogImageUrl = "https://chicken22.github.io/chicken22/opengraph-image";
+const fallbackOgImageUrl = "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=1200&h=630";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chicken22.github.io/chicken22"),
+  metadataBase: new URL(siteUrl),
   title: "L'ÉLIXIR — 3D Gastronomy Salon | Michelin Three-Star Experience",
   description:
     "An avant-garde multi-sensory fine dining odyssey in Paris, orchestrated with synchronized 3D spatial projections, molecular alchemy, and rare European vintage pairings.",
@@ -31,22 +35,24 @@ export const metadata: Metadata = {
     title: "L'ÉLIXIR — 3D Gastronomy Salon",
     description:
       "Michelin three-star fine dining experience with immersive 3D culinary previews and multi-sensory projection art.",
-    url: "https://chicken22.github.io/chicken22",
+    url: siteUrl,
     siteName: "L'Élixir 3D Gastronomy Salon",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: ogImageUrl,
         width: 1200,
         height: 630,
-        alt: "L'ÉLIXIR — 3D Gastronomy Salon Preview",
+        alt: "L'ÉLIXIR — 3D Gastronomy Salon Michelin Three-Star Experience",
+        type: "image/png",
       },
       {
-        url: "/og-image.svg",
+        url: fallbackOgImageUrl,
         width: 1200,
         height: 630,
-        alt: "L'ÉLIXIR — 3D Gastronomy Salon Preview",
+        alt: "L'ÉLIXIR Haute Cuisine Preview",
+        type: "image/jpeg",
       },
     ],
   },
@@ -55,7 +61,7 @@ export const metadata: Metadata = {
     title: "L'ÉLIXIR — 3D Gastronomy Salon",
     description:
       "Michelin three-star fine dining experience with immersive 3D culinary previews.",
-    images: ["/og-image.png"],
+    images: [ogImageUrl, fallbackOgImageUrl],
   },
   icons: {
     icon: "/favicon.ico",
@@ -76,6 +82,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Explicit OpenGraph & Telegram/WhatsApp tags */}
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:secure_url" content={ogImageUrl} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="L'ÉLIXIR — 3D Gastronomy Salon" />
+        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
