@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -60,7 +59,22 @@ const circularMenuData = [
 export const RunningCardsMenu = () => {
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [hasScrolledIn, setHasScrolledIn] = useState(true);
+  const ref = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        setHasScrolledIn(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Continuous auto-scroll loop
   useEffect(() => {
@@ -88,34 +102,22 @@ export const RunningCardsMenu = () => {
   const duplicatedCards = [...circularMenuData, ...circularMenuData, ...circularMenuData];
 
   return (
-    <section className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
+    <section ref={ref} className="py-24 bg-[#681403] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[700px]">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EFB11D]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Title Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="text-center mb-12 px-6 relative z-10"
-      >
+      <div className={`text-center mb-12 px-6 relative z-10 transition-all duration-500 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}>
         <span className="text-[#EFB11D] text-xs font-semibold tracking-widest uppercase mb-2 block">
           Immersive Experience
         </span>
         <h2 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-white">
           Continuous Culinary Stream
         </h2>
-      </motion.div>
+      </div>
 
       {/* Running Marquee Cards Track */}
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full"
-      >
+      <div className={`w-full transition-all duration-500 delay-150 ease-out ${hasScrolledIn ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
         <div
           ref={scrollRef}
           onMouseEnter={() => setIsHovered(true)}
@@ -156,17 +158,12 @@ export const RunningCardsMenu = () => {
             </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Modal for Clickable Card Inspection */}
       {selectedCard && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-2xl bg-neutral-950/95 backdrop-blur-2xl border border-white/25 rounded-3xl overflow-hidden shadow-2xl text-white p-6 sm:p-8"
-          >
+          <div className="relative w-full max-w-2xl bg-neutral-950/95 backdrop-blur-2xl border border-white/25 rounded-3xl overflow-hidden shadow-2xl text-white p-6 sm:p-8">
             <button
               onClick={() => setSelectedCard(null)}
               className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/20 text-white hover:text-[#EFB11D] flex items-center justify-center transition-colors shadow-sm"
@@ -210,7 +207,7 @@ export const RunningCardsMenu = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </section>
