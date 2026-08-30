@@ -1,153 +1,191 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Calendar, Clock, Users, UtensilsCrossed, CheckCircle2 } from "lucide-react";
+import { X, Calendar, Clock, Users, Sparkles, CheckCircle2, Utensils, Award } from "lucide-react";
 import { toast } from "sonner";
 
-export const ReservationModal = ({ children }: { children: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+interface ReservationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
+  const [step, setStep] = useState<1 | 2>(1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    date: "",
-    time: "19:00",
-    guests: "2",
-    requests: "",
+    guests: "2 Guests",
+    date: "2025-04-15",
+    time: "19:00 (First Seating)",
+    dietary: ""
   });
+
+  if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    toast.success("Table reservation confirmed successfully!");
+    if (!formData.name || !formData.email || !formData.phone) {
+      toast.error("Please fill in all contact details.");
+      return;
+    }
+    setStep(2);
+    toast.success("Table reserved successfully! Confirmation sent to your email.");
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => { setIsOpen(open); if(!open) setIsSubmitted(false); }}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent className="bg-[#EBE9E1]/95 backdrop-blur-2xl border border-white/80 text-[#221c19] sm:max-w-lg p-6 sm:p-8 rounded-3xl shadow-2xl">
-        <DialogHeader className="mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-[#E43D12]/10 flex items-center justify-center mb-4 border border-[#E43D12]/30">
-            <UtensilsCrossed className="w-6 h-6 text-[#E43D12]" />
-          </div>
-          <DialogTitle className="text-2xl font-serif font-bold text-[#221c19]">Reserve Your Table</DialogTitle>
-          <p className="text-sm text-[#221c19]/70">Experience L'Élixir's 3D Gastronomy in person.</p>
-        </DialogHeader>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xl animate-in fade-in duration-300">
+      <div className="relative w-full max-w-xl bg-neutral-900 border border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl text-white">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 rounded-full bg-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-        {isSubmitted ? (
-          <div className="py-12 text-center space-y-4">
-            <div className="w-16 h-16 bg-emerald-500/20 border border-emerald-500/40 rounded-full flex items-center justify-center mx-auto text-emerald-600">
-              <CheckCircle2 className="w-8 h-8" />
+        {step === 1 ? (
+          <div>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-widest uppercase mb-4 w-fit">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Exclusive 12-Course Booking</span>
             </div>
-            <h3 className="text-2xl font-serif font-bold text-[#221c19]">Reservation Confirmed!</h3>
-            <p className="text-sm text-[#221c19]/75 max-w-sm mx-auto">
-              We have sent a confirmation email to <span className="text-[#E43D12] font-medium">{formData.email}</span> with your booking details.
-            </p>
-            <Button
-              onClick={() => setIsOpen(false)}
-              className="mt-6 bg-[#E43D12] hover:bg-[#c9320d] text-white font-bold px-8 rounded-xl shadow-md"
-            >
-              Done
-            </Button>
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-2">Reserve Your 3D Dining Experience</h3>
+            <p className="text-neutral-400 text-sm mb-6">Seating is strictly limited to 16 guests per session to ensure pristine 3D projection synchronization.</p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Monsieur / Madame"
+                    value={formData.name}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="guest@luxury.com"
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="+1 (555) 019-2834"
+                    value={formData.phone}
+                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Party Size</label>
+                  <select
+                    value={formData.guests}
+                    onChange={e => setFormData({ ...formData, guests: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                  >
+                    <option>1 Guest</option>
+                    <option>2 Guests</option>
+                    <option>4 Guests (Private Table)</option>
+                    <option>6 Guests (VIP Salon)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Preferred Date</label>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={e => setFormData({ ...formData, date: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Seating Time</label>
+                  <select
+                    value={formData.time}
+                    onChange={e => setFormData({ ...formData, time: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                  >
+                    <option>17:30 (Sunset Seating)</option>
+                    <option>19:00 (First Seating)</option>
+                    <option>21:15 (Starlight Seating)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-neutral-400 mb-1.5">Dietary Notes / Allergies (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Vegetarian, Shellfish allergy, etc."
+                  value={formData.dietary}
+                  onChange={e => setFormData({ ...formData, dietary: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 text-neutral-950 font-bold tracking-wide hover:from-amber-400 hover:to-yellow-500 transition-all duration-300 shadow-xl shadow-amber-600/30 flex items-center justify-center gap-2 mt-6"
+              >
+                <Utensils className="w-5 h-5" />
+                <span>Confirm Reservation ($380 per guest)</span>
+              </button>
+            </form>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-xs uppercase tracking-wider text-[#221c19]/70 font-semibold">Full Name</Label>
-              <Input
-                id="name"
-                required
-                placeholder="Jean Dupont"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="bg-white/60 border-white/80 text-[#221c19] focus:border-[#E43D12] rounded-xl shadow-inner"
-              />
+          <div className="text-center py-8">
+            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
+            <h3 className="text-3xl font-serif font-bold mb-2">Reservation Confirmed</h3>
+            <p className="text-neutral-300 text-sm mb-6">
+              We look forward to welcoming you, <span className="text-amber-400 font-semibold">{formData.name}</span>. A confirmation email has been dispatched to <span className="text-amber-400 font-semibold">{formData.email}</span>.
+            </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-xs uppercase tracking-wider text-[#221c19]/70 font-semibold">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  placeholder="jean@example.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-white/60 border-white/80 text-[#221c19] focus:border-[#E43D12] rounded-xl shadow-inner"
-                />
+            <div className="p-6 rounded-2xl bg-neutral-950 border border-neutral-800 text-left space-y-3 mb-8">
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-400">Date & Time:</span>
+                <span className="font-medium text-amber-200">{formData.date} at {formData.time}</span>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-xs uppercase tracking-wider text-[#221c19]/70 font-semibold">Phone Number</Label>
-                <Input
-                  id="phone"
-                  required
-                  placeholder="+1 (555) 019-2834"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="bg-white/60 border-white/80 text-[#221c19] focus:border-[#E43D12] rounded-xl shadow-inner"
-                />
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-400">Party Size:</span>
+                <span className="font-medium text-amber-200">{formData.guests}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-400">Experience:</span>
+                <span className="font-medium text-amber-200">12-Course Molecular 3D Symphony</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="date" className="text-xs uppercase tracking-wider text-[#221c19]/70 font-semibold">Date</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  required
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="bg-white/60 border-white/80 text-[#221c19] focus:border-[#E43D12] rounded-xl text-xs shadow-inner"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="time" className="text-xs uppercase tracking-wider text-[#221c19]/70 font-semibold">Time</Label>
-                <select
-                  id="time"
-                  value={formData.time}
-                  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className="w-full h-10 px-3 bg-white/60 border border-white/80 text-[#221c19] focus:border-[#E43D12] rounded-xl text-sm shadow-inner"
-                >
-                  <option value="18:00">6:00 PM</option>
-                  <option value="19:00">7:00 PM</option>
-                  <option value="20:00">8:00 PM</option>
-                  <option value="21:00">9:00 PM</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="guests" className="text-xs uppercase tracking-wider text-[#221c19]/70 font-semibold">Guests</Label>
-                <select
-                  id="guests"
-                  value={formData.guests}
-                  onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                  className="w-full h-10 px-3 bg-white/60 border border-white/80 text-[#221c19] focus:border-[#E43D12] rounded-xl text-sm shadow-inner"
-                >
-                  <option value="1">1 Person</option>
-                  <option value="2">2 Persons</option>
-                  <option value="4">4 Persons</option>
-                  <option value="6">6+ Persons</option>
-                </select>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-[#E43D12] hover:bg-[#c9320d] text-white font-bold py-4 rounded-xl shadow-lg shadow-[#E43D12]/25 text-base mt-4 transition-transform active:scale-98"
+            <button
+              onClick={() => {
+                setStep(1);
+                onClose();
+              }}
+              className="px-8 py-3 rounded-full bg-neutral-800 text-white hover:bg-neutral-700 transition-colors text-sm font-medium"
             >
-              Confirm Table Reservation
-            </Button>
-          </form>
+              Close Window
+            </button>
+          </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
-};
+}

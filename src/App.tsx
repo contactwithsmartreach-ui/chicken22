@@ -1,28 +1,39 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import Menu from "./components/Menu";
-import ChefStory from "./components/ChefStory";
-import VirtualTour3D from "./components/VirtualTour3D";
-import ReviewSection from "./components/ReviewSection";
-import Reservation from "./components/Reservation";
+import InteractiveMenu3D from "./components/InteractiveMenu3D";
+import Experience3D from "./components/Experience3D";
+import ChefSection from "./components/ChefSection";
+import ReviewsSection from "./components/ReviewsSection";
 import Footer from "./components/Footer";
-import GitHubSyncNotice from "./components/GitHubSyncNotice";
+import ReservationModal from "./components/ReservationModal";
+import { Toaster } from "sonner";
 
 export default function App() {
+  const [reservationOpen, setReservationOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 selection:bg-amber-500 selection:text-neutral-950 font-sans">
-      <Navbar />
-      <Hero />
-      <Menu />
-      <ChefStory />
-      <VirtualTour3D />
-      <ReviewSection />
-      <Reservation />
+    <div className="min-h-screen bg-neutral-950 font-sans selection:bg-amber-500 selection:text-neutral-950">
+      <Toaster position="top-right" richColors theme="dark" />
+      
+      <Navbar onOpenReservation={() => setReservationOpen(true)} />
+      
+      <main>
+        <Hero />
+        <InteractiveMenu3D />
+        <Experience3D />
+        <ChefSection />
+        <ReviewsSection />
+      </main>
+
       <Footer />
-      <GitHubSyncNotice />
+
+      <ReservationModal
+        isOpen={reservationOpen}
+        onClose={() => setReservationOpen(false)}
+      />
     </div>
   );
 }
