@@ -60,7 +60,7 @@ export const HeroScrollVideo = () => {
           <div className="absolute w-[320px] h-[320px] rounded-full border border-dashed border-white/20 animate-[spin_20s_linear_infinite_reverse]" />
         </div>
 
-        {/* Video Player with multi-source fallback for GitHub Pages */}
+        {/* Video Player without poster attribute for instant seamless display */}
         <video
           ref={videoRef}
           className={`absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu transition-opacity duration-1000 ${videoLoaded ? "opacity-100" : "opacity-90"}`}
@@ -69,7 +69,6 @@ export const HeroScrollVideo = () => {
           loop
           playsInline
           preload="auto"
-          poster="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=1920"
           onLoadedData={() => setVideoLoaded(true)}
           onError={(e) => {
             console.warn("Video failed to load primary source, falling back to CDN source.", e);
@@ -85,9 +84,6 @@ export const HeroScrollVideo = () => {
           <source src="/videos/restaurant_3d.mp4" type="video/mp4" />
           <source src={fallbackCdnVideoUrl} type="video/mp4" />
         </video>
-
-        {/* Ambient Darkened Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#681403] via-black/30 to-[#681403]/60 pointer-events-none" />
 
         {/* Floating Video Audio & Play Controls */}
         <div className="absolute bottom-8 right-8 z-20 hidden sm:flex items-center gap-2 bg-black/60 border border-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-md text-xs text-white">
